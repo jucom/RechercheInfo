@@ -7,9 +7,13 @@ import java.sql.*;
 public class Matcher {
 	DatabaseMgmt db;
 
-	public Matcher(DatabaseMgmt db) {
-		this.db = db;
+	public Matcher() {
+		this.db = new DatabaseMgmt();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void setDatabaseMgmt(DatabaseMgmt db){
+		this.db = db;
 	}
 
 	//cree un tableau de string avec les mots pertinents
