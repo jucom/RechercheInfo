@@ -44,11 +44,12 @@ public class DatabaseMgmt {
 					"FOREIGN KEY (IDDOC) REFERENCES DOCS(ID))";
 			stmt.executeUpdate(sql);
 			stmt.close();
+			System.out.println("Table created successfully");
+			
 		} catch ( Exception e ) {
-			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-			System.exit(0);
+			System.out.println("Table already created successfully");
 		}
-		System.out.println("Table created successfully");
+		
 	}
 
 	public void insertWordOrDoc(String tableName, int id, String value){
