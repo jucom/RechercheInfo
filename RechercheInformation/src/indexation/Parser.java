@@ -1,9 +1,15 @@
 package indexation;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -78,6 +84,34 @@ public class Parser {
 		}
 	}
 	
+	
+	public static String readFileContent(final String fileName, final String encoding) throws IOException {
+        // Récupération du fichier
+        final File file = new File(fileName);
+ 
+        // Création d'un flux de lecture de fichier
+        final InputStream fileReader = new FileInputStream(file);
+ 
+        // Création d'un lecteur
+        final Reader utfReader = new InputStreamReader(fileReader, encoding);
+ 
+        // Création d'un lecteur plus intelligent. Il lira ligne par ligne au lieu de caractère par caractère
+        final BufferedReader input =  new BufferedReader(utfReader);
+ 
+        // Le séparateur de fin de ligne, suivant qu'on soit sous Linux ou Windows, il diffère
+        final String separator = System.getProperty("line.separator");
+ 
+        // L'objet qui contiendra le contenu du fichier
+        final StringBuilder builder = new StringBuilder();
+ 
+        String line = null;
+        while ((line = input.readLine()) != null){
+            builder.append(line);
+            builder.append(separator);
+        }
+        return builder.toString();
+    }
+	
 
 	public static void main( String args[] ){
 		File input = new File("/home/jriviere/Bureau/RI/CORPUS/CORPUS/D1.html");
@@ -87,7 +121,14 @@ public class Parser {
 		String cleaned = removeNumbers(s);
 		String[] tokens = tokenize(cleaned);
 		list = troncate(tokens);
-		printStringArrayList(list);
+		//printStringArrayList(list);
+		try {
+			String stopList = readFileContent("/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt","iso-8859-1");
+			System.out.println(stopList);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
