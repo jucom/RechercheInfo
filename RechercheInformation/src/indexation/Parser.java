@@ -3,13 +3,12 @@ package indexation;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -64,6 +63,8 @@ public class Parser {
 		String s2 = null;
 		for (String token : tokens)	{	
 			token = token.replace(" ", "");
+			token = token.replace("´", "");
+			token = token.replace("ª", "");
 			token = token.replace("\\P{Graph}","");
 			if (token.length() > 2) {
 			    if (token.length() > 7) {
@@ -72,7 +73,7 @@ public class Parser {
 			    else {
 			    	s2 = token;
 			    }
-			    tokenList.add(s2);
+			    tokenList.add(s2.toLowerCase());
 			}
 		 }
 		return tokenList;		
@@ -85,48 +86,69 @@ public class Parser {
 	}
 	
 	
-	public static String readFileContent(final String fileName, final String encoding) throws IOException {
-        // R√©cup√©ration du fichier
-        final File file = new File(fileName);
+	public static ArrayList<String> readFileContent(final String fileName, final String encoding) throws IOException {
+        // Recuperation du fichier
+        File file = new File(fileName);
  
-        // Cr√©ation d'un flux de lecture de fichier
-        final InputStream fileReader = new FileInputStream(file);
+        // Creation d'un flux de lecture de fichier
+        InputStream fileReader = new FileInputStream(file);
  
-        // Cr√©ation d'un lecteur
-        final Reader utfReader = new InputStreamReader(fileReader, encoding);
+        // Creation d'un lecteur
+        Reader utfReader = new InputStreamReader(fileReader, encoding);
  
-        // Cr√©ation d'un lecteur plus intelligent. Il lira ligne par ligne au lieu de caract√®re par caract√®re
-        final BufferedReader input =  new BufferedReader(utfReader);
- 
-        // Le s√©parateur de fin de ligne, suivant qu'on soit sous Linux ou Windows, il diff√®re
-        final String separator = System.getProperty("line.separator");
- 
-        // L'objet qui contiendra le contenu du fichier
-        final StringBuilder builder = new StringBuilder();
+        // Creation d'un lecteur plus intelligent. Il lira ligne par ligne au lieu de caractere par caractere
+        BufferedReader input =  new BufferedReader(utfReader);
+
+        // Liste qui contiendra le contenu du fichier
+        ArrayList<String> list = new ArrayList<String>();
  
         String line = null;
         while ((line = input.readLine()) != null){
-            builder.append(line);
-            builder.append(separator);
+        	list.add(line);
         }
-        return builder.toString();
+        input.close();
+        return list;
     }
 	
+	public static ArrayList<String> deleteTokensFromStopList(ArrayList<String> list, ArrayList<String> stoplist) {
+		boolean found = false;
+		
+		Iterator<String> iterator = list.iterator();
+		while (iterator.hasNext()) {
+			// On rÈcupËre l'ÈlÈment courant
+			String word = iterator.next(); 
+			found = false;
+			int i = 0;
+			while (!found && i < stoplist.size()) {
+				if (word.equals(stoplist.get(i))) {
+					found = true;
+					// On supprime l'ÈlÈment courant
+					iterator.remove();
+				}
+				else {
+					i++;
+				}				
+			}
+		}		
+		return list;
+	}
 
 	public static void main( String args[] ){
-		File input = new File("/home/jriviere/Bureau/RI/CORPUS/CORPUS/D1.html");
+		//File input = new File("/home/jriviere/Bureau/RI/CORPUS/CORPUS/D1.html");
+		File input = new File("C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/D1.html");
 		ArrayList<String> list = new ArrayList<String>();
 		String s = parseDocument(input,"UTF-8");
-		//String cleaned = clean(s);
-		String cleaned = removeNumbers(s);
-		String[] tokens = tokenize(cleaned);
+		s = removeNumbers(s);
+		s = clean(s);
+		String[] tokens = tokenize(s);
 		list = troncate(tokens);
 		//printStringArrayList(list);
 		try {
-			String stopList = readFileContent("/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt","iso-8859-1");
-			System.out.println(stopList);
+			ArrayList<String> stopList = readFileContent("C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt","iso-8859-1");
+			//printStringArrayList(stopList);
+			list = deleteTokensFromStopList(list,stopList);
+			//printStringArrayList(list);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
