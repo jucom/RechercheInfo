@@ -63,8 +63,6 @@ public class Parser {
 		String s2 = null;
 		for (String token : tokens)	{	
 			token = token.replace(" ", "");
-			token = token.replace("«", "");
-			token = token.replace("»", "");
 			token = token.replace("\\P{Graph}","");
 			if (token.length() > 2) {
 			    if (token.length() > 7) {
@@ -115,14 +113,14 @@ public class Parser {
 		
 		Iterator<String> iterator = list.iterator();
 		while (iterator.hasNext()) {
-			// On récupère l'élément courant
+			// On recupere l'element courant
 			String word = iterator.next(); 
 			found = false;
 			int i = 0;
 			while (!found && i < stoplist.size()) {
 				if (word.equals(stoplist.get(i))) {
 					found = true;
-					// On supprime l'élément courant
+					// On supprime l'element courant
 					iterator.remove();
 				}
 				else {
@@ -132,25 +130,35 @@ public class Parser {
 		}		
 		return list;
 	}
-
-	public static void main( String args[] ){
-		//File input = new File("/home/jriviere/Bureau/RI/CORPUS/CORPUS/D1.html");
-		File input = new File("C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/D1.html");
+	
+	public static ArrayList<String> parsing(File filePath, String stopListPath) {
+		//File input = new File(filePath);
 		ArrayList<String> list = new ArrayList<String>();
-		String s = parseDocument(input,"UTF-8");
+		String s = parseDocument(filePath,"UTF-8");
 		s = removeNumbers(s);
 		s = clean(s);
 		String[] tokens = tokenize(s);
 		list = troncate(tokens);
-		//printStringArrayList(list);
 		try {
-			ArrayList<String> stopList = readFileContent("C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt","iso-8859-1");
+			ArrayList<String> stopList = readFileContent(stopListPath,"iso-8859-1");
 			//printStringArrayList(stopList);
 			list = deleteTokensFromStopList(list,stopList);
 			//printStringArrayList(list);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return list;
+	}
+
+	public static void main( String args[] ){
+		String input = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/D1.html";
+		File inputFile = new File(input);
+		//String input = "C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/D1.html";
+		//String stopListPath = "C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt";
+		String stopListPath = "/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt";
+		ArrayList<String> result = new ArrayList<String>();
+		result = parsing(inputFile, stopListPath);
+		printStringArrayList(result);
 	}
 	
 	

@@ -50,6 +50,39 @@ public class DatabaseMgmt {
 		}
 		System.out.println("Table created successfully");
 	}
+	
+	public boolean wordExists(String word) {
+		Statement stmt = null;
+		try {
+			//c.setAutoCommit(false);
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM WORDS WHERE NAME="+'"'+word+'"'+";" );
+			if (rs.getInt("count") == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+			
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.exit(0);
+		}
+		return false;			
+	}
+	
+	public int getID(String tableName, String value) {
+		Statement stmt = null;
+		try {
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery( "SELECT ID AS id FROM "+ tableName +" WHERE NAME="+'"'+value+'"'+";" );
+			return rs.getInt("id");
+			} catch ( Exception e ) {
+				System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+				System.exit(0);
+			}
+		return -1;
+	}
 
 	public void insertWordOrDoc(String tableName, String value){
 		Statement stmt = null;
@@ -65,7 +98,6 @@ public class DatabaseMgmt {
 				stmt.executeUpdate(sql);
 				// sinon, occ++
 			} else {
-
 				c.setAutoCommit(false);
 				stmt = c.createStatement();
 				//parsage des docs récupération infos
@@ -123,8 +155,12 @@ public class DatabaseMgmt {
 		}
 		System.out.println("Database closed successfully");
 	}
-
-
+	
+	public void initDB() {
+		loadDB();
+		createTable();
+	}
+	
 
 
 }
