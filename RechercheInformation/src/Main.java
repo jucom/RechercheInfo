@@ -1,3 +1,4 @@
+import matcher.Matcher;
 import indexation.DatabaseMgmt;
 
 
@@ -5,13 +6,14 @@ import indexation.DatabaseMgmt;
 
 public class Main {
 	static DatabaseMgmt db = new DatabaseMgmt();
+	static Matcher matcher = new Matcher();
 	static int idWord = 1 ;
 	static int idDoc = 1 ; 
 	
 	  public static void main( String args[] ){
 		  db.loadDB();
 		  db.createTable();
-		  db.insertWordOrDoc("WORDS", "coucou");
+		  /*db.insertWordOrDoc("WORDS", "coucou");
 		  idWord++;
 		  db.insertWordOrDoc("DOCS", "D2");
 		  idDoc++;
@@ -20,7 +22,14 @@ public class Main {
 		  System.out.println("insertIndexation(1, 2)");
 		  db.insertIndexation(1, 2);
 		  System.out.println("insertIndexation(2, 2)");
-		  db.insertIndexation(2, 2);
+		  db.insertIndexation(2, 2);*/
+		  
+		  matcher.setDatabaseMgmt(db);
+		  matcherTest();
 		  db.closeDB();
+	  }
+	  
+	  public static void matcherTest(){
+		  matcher.CleanRequest("Le compagnon de sa soeur est le mari de sa femme");
 	  }
 }
