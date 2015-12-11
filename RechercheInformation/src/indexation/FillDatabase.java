@@ -2,12 +2,23 @@ package indexation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class FillDatabase {
 	
 	DatabaseMgmt db;
 	String stopListPath ;
+	String docsPath;
 	
+	public String getDocsPath() {
+		return docsPath;
+	}
+
+	public void setDocsPath(String docsPath) {
+		this.docsPath = docsPath;
+	}
+
 	public String getStopListPath() {
 		return stopListPath;
 	}
@@ -19,12 +30,14 @@ public class FillDatabase {
 	public FillDatabase() {
 		this.db = new DatabaseMgmt();
 		this.stopListPath = "/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt";
+		this.docsPath = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/";
 	}
 	
-	public void fillDatabaseWithFile(String input, String charsetName) {
+	public void fillDatabaseWithFile(String input) {
 		File inputFile = new File(input);
 		// on cree le document dans la table des documents 
 		db.insertWordOrDoc("DOCS", inputFile.getName());
+		int idDoc = db.getID("DOCS",inputFile.getName());
 		// on parse le document input
 		ArrayList<String> result = new ArrayList<String>();
 		result = Parser.parsing(inputFile, stopListPath);
@@ -35,15 +48,43 @@ public class FillDatabase {
 				db.insertWordOrDoc("WORDS",word);
 			}
 			int idWord = db.getID("WORDS", word);
-			int idDoc = db.getID("DOCS",inputFile.getName());
-			db.insertIndexation(idWord,idDoc);
-			
+			db.insertIndexation(idWord,idDoc);			
+		}		
+	}
+
+	public ArrayList<String> listerRepertoire(String rep){
+		File repertoire = new File(rep);
+		String [] listefichiers = null;
+		ArrayList<String> list = null;
+		if (repertoire.isDirectory()) {
+			listefichiers=repertoire.list();
+			list = new ArrayList<String>(Arrays.asList(listefichiers));
+			for (Iterator<String> iterator = list.iterator(); iterator.hasNext(); ) {
+			    String doc = iterator.next();
+			    if (doc.endsWith("#")) {
+			        iterator.remove();
+			    }
+			}
+			/*
+			for (String s : list) {
+				System.out.println(s);
+			}*/
 		}
-		
+		return list;
 	}
 	
 	public void fillDatabaseWithAllFiles() {
-		db.initDB();
+		ArrayList<String> listRep = new ArrayList<String>();
+		listRep = listerRepertoire(this.docsPath);
+		String input = null;
+		db.initDB();		
+		for (String file : listRep) {
+			input = this.docsPath+file;
+			System.out.println("*********");
+			System.out.println("FILE "+input);
+			fillDatabaseWithFile(input);
+			System.out.println("*********");
+		}
 		db.closeDB();
 	}
 

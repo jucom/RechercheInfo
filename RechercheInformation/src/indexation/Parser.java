@@ -17,6 +17,8 @@ import org.jsoup.nodes.TextNode;
 
 public class Parser {
 	
+	// d110 : iso..
+	
 	public static String parseDocument(File input, String charsetName) {
 		
 		Document doc = null;
@@ -63,6 +65,11 @@ public class Parser {
 		String s2 = null;
 		for (String token : tokens)	{	
 			token = token.replace(" ", "");
+			token = token.replace("»", "");
+			token = token.replace("«", "");
+			token = token.replace("­‐", "");
+			token = token.replace("’", "");
+			token = token.replace("©", "");
 			token = token.replace("\\P{Graph}","");
 			if (token.length() > 2) {
 			    if (token.length() > 7) {
@@ -134,7 +141,7 @@ public class Parser {
 	public static ArrayList<String> parsing(File filePath, String stopListPath) {
 		//File input = new File(filePath);
 		ArrayList<String> list = new ArrayList<String>();
-		String s = parseDocument(filePath,"UTF-8");
+		String s = parseDocument(filePath,"utf-8");
 		s = removeNumbers(s);
 		s = clean(s);
 		String[] tokens = tokenize(s);
@@ -151,7 +158,7 @@ public class Parser {
 	}
 
 	public static void main( String args[] ){
-		String input = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/D1.html";
+		String input = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/D100.html";
 		File inputFile = new File(input);
 		//String input = "C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/D1.html";
 		//String stopListPath = "C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt";
