@@ -139,12 +139,29 @@ public class DatabaseMgmt {
 			rs.close();
 			c.commit();
 		} catch ( Exception e ) {
-			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
 		System.out.println("Records created successfully");
 	}
 
+	public int getOccWordDoc(String word, String doc){
+		Statement stmt;
+		int occ = 0;
+		
+		try {
+			stmt = c.createStatement();
+			//System.out.println(word);
+			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) as count, OCC AS occ FROM INDEXTABLE WHERE IDDOC=(SELECT ID FROM WORDS WHERE NAME="+'"'+word+'"'+") and IDWORD=(SELECT ID FROM DOCS WHERE NAME="+'"'+doc+'"'+");" );
+			if (rs.getInt("count")!=0){
+				occ = rs.getInt("occ");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return occ;
+	}
 
 	public void closeDB(){	
 		try {

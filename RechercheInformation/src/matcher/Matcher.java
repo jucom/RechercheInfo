@@ -3,9 +3,9 @@ package matcher;
 import indexation.DatabaseMgmt;
 import indexation.Parser;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -21,20 +21,22 @@ public class Matcher {
 	}
 
 	//cree un tableau de string avec les mots pertinents
-	public void CleanRequest(String req){
+	public ArrayList<String> CleanRequest(String req){
 		req = Parser.clean(req);
 		req = Parser.removeNumbers(req);
 		String[]tabReq = Parser.tokenize(req);
 		ArrayList<String> listReq = Parser.troncate(tabReq);
 		Parser.printStringArrayList(listReq);
+		return listReq;
 	}
 
-	public int SumTermFrequency(ArrayList<String> termes, String Doc){
+	public int SumTermFrequency(ArrayList<String> termes, String doc){
 		int tf = 0;
 		//Pour chaque termes on cherche le nombre d'occurrence dans le Doc
 		for (String t : termes)  {
 			int rs = 0;
 			//On met à jour la somme des tf
+			rs = db.getOccWordDoc(t, doc);
 			tf += rs;
 		}
 		return tf;
@@ -42,15 +44,17 @@ public class Matcher {
 
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
-	public Map<Integer,String> MatcherDocWords(ArrayList<String> termes, String[] Docs){
+	//verifier le resultat !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	public Map<Integer,String> MatcherDocWords(ArrayList<String> termes, ArrayList<String> docs){
 		//Pour tous les docs on calcules la sum des tfs et on les classes
-		Map<Integer,String> map = null;
-		for (String doc :Docs){
+		Map<Integer,String> map = new HashMap<>();
+		System.out.println("declaration Map OK");
+		for (String doc :docs){
 			int res =  SumTermFrequency(termes, doc);
 			map.put(res, doc);
 		}
-		System.out.println("\nSorted Map......");
-		Map<Integer, String> treeMap = new TreeMap<Integer, String>(
+		printMap(map);
+		 Map<Integer, String> treeMap = new TreeMap<Integer, String>(
 				new Comparator<Integer>() {
 
 					@Override
@@ -59,11 +63,9 @@ public class Matcher {
 					}
 
 				});
-		treeMap.putAll(map);
+		treeMap.putAll(treeMap);
 
-		printMap(treeMap);
-
-		return map; 
+		return treeMap; //Verifier le resultat
 	}
 
 	public static void printMap(Map<Integer, String> map) {
