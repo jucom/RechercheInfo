@@ -34,6 +34,9 @@ public class FillDatabase {
 				// on ajoute le mot dans la table word
 				db.insertWordOrDoc("WORDS",word);
 			}
+			int idWord = db.getID("WORDS", word);
+			int idDoc = db.getID("DOCS",inputFile.getName());
+			db.insertIndexation(idWord,idDoc);
 			
 		}
 		
