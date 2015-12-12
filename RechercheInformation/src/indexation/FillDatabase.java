@@ -29,8 +29,11 @@ public class FillDatabase {
 
 	public FillDatabase() {
 		this.db = new DatabaseMgmt();
-		this.stopListPath = "/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt";
-		this.docsPath = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/";
+		//this.stopListPath = "/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt";
+		//this.docsPath = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/";
+		this.docsPath = "C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/";
+		this.stopListPath = "C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt";
+		
 	}
 	
 	public void fillDatabaseWithFile(String input) {

@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.jsoup.Jsoup;
@@ -17,7 +19,6 @@ import org.jsoup.nodes.TextNode;
 
 public class Parser {
 	
-	// d110 : iso..
 	
 	public static String parseDocument(File input, String charsetName) {
 		
@@ -90,6 +91,10 @@ public class Parser {
 		}
 	}
 	
+	public static String normalize(String input) {
+		return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
+	}
+	
 	
 	public static ArrayList<String> readFileContent(final String fileName, final String encoding) throws IOException {
         // Recuperation du fichier
@@ -114,6 +119,7 @@ public class Parser {
         input.close();
         return list;
     }
+
 	
 	public static ArrayList<String> deleteTokensFromStopList(ArrayList<String> list, ArrayList<String> stoplist) {
 		boolean found = false;
@@ -140,8 +146,17 @@ public class Parser {
 	
 	public static ArrayList<String> parsing(File filePath, String stopListPath) {
 		//File input = new File(filePath);
+		String[] isoFiles = {"D110.html","D125.html","D77.html","D93.html"};
+		String[] unknown8bitFiles = {"D117.html","D118.html","D12.html","D44.html","D46.html","D49.html","D75.html","D89.html","D90.html"};
+		String s = null;
 		ArrayList<String> list = new ArrayList<String>();
-		String s = parseDocument(filePath,"utf-8");
+		if(Arrays.asList(isoFiles).contains(filePath.getName()) || Arrays.asList(unknown8bitFiles).contains(filePath.getName())) {
+			s = parseDocument(filePath,"iso-8859-1");
+		}
+		else {
+			s = parseDocument(filePath,"utf-8");
+		}
+		s = normalize(s);
 		s = removeNumbers(s);
 		s = clean(s);
 		String[] tokens = tokenize(s);
@@ -158,11 +173,11 @@ public class Parser {
 	}
 
 	public static void main( String args[] ){
-		String input = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/D100.html";
+		//String input = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/D110.html";
+		String input = "C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/D90.html";
+		String stopListPath = "C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt";
+		//String stopListPath = "/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt";
 		File inputFile = new File(input);
-		//String input = "C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/D1.html";
-		//String stopListPath = "C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt";
-		String stopListPath = "/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt";
 		ArrayList<String> result = new ArrayList<String>();
 		result = parsing(inputFile, stopListPath);
 		printStringArrayList(result);
