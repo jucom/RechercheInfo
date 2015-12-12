@@ -4,6 +4,7 @@ import indexation.DatabaseMgmt;
 import indexation.Parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,33 +46,33 @@ public class Matcher {
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
 	//verifier le resultat !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	public Map<Integer,String> MatcherDocWords(ArrayList<String> termes, ArrayList<String> docs){
+	public Object[] MatcherDocWords(ArrayList<String> termes, ArrayList<String> docs){
 		//Pour tous les docs on calcules la sum des tfs et on les classes
-		Map<Integer,String> map = new HashMap<>();
+		Map<String,Integer> map = new HashMap<>();
 		System.out.println("declaration Map OK");
 		for (String doc :docs){
 			int res =  SumTermFrequency(termes, doc);
-			map.put(res, doc);
+			map.put(doc, res);
 		}
-		printMap(map);
-		 Map<Integer, String> treeMap = new TreeMap<Integer, String>(
-				new Comparator<Integer>() {
 
-					@Override
-					public int compare(Integer o1, Integer o2) {
-						return o2.compareTo(o1);
-					}
-
-				});
-		treeMap.putAll(treeMap);
-
-		return treeMap; //Verifier le resultat
+		Object[] mapTrier = map.entrySet().toArray();
+		Arrays.sort(mapTrier, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return ((Map.Entry<String, Integer>) o2).getValue().compareTo(
+						((Map.Entry<String, Integer>) o1).getValue());
+			}
+		});
+		/*for (Object e : mapTrier) {
+			System.out.println(((Map.Entry<String, Integer>) e).getKey() + " : "
+					+ ((Map.Entry<String, Integer>) e).getValue());
+		}*/
+		return mapTrier;
 	}
 
-	public static void printMap(Map<Integer, String> map) {
-		for (Map.Entry<Integer, String> entry : map.entrySet()) {
-			System.out.println("sumtf : " + entry.getKey() 
-					+ " Doc : " + entry.getValue());
+	public static void printMap(Map<String, Integer> map) {
+		for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			System.out.println("Doc : " + entry.getKey() 
+					+ " sumtf : " + entry.getValue());
 		}
 	}
 

@@ -1,12 +1,15 @@
 import java.util.ArrayList;
+import java.util.Map;
 
 import matcher.Matcher;
 import indexation.DatabaseMgmt;
+import indexation.FillDatabase;
 
 
 
 
 public class Main {
+	static FillDatabase fillDb = new FillDatabase();
 	static DatabaseMgmt db = new DatabaseMgmt();
 	static Matcher matcher = new Matcher();
 	static int idWord = 1 ;
@@ -29,20 +32,23 @@ public class Main {
 		  System.out.println(db.wordExists("coucou"));
 		  System.out.println(db.wordExists("pizza"));
 		  System.out.println(db.getID("WORDS", "coucou"));*/
-		  db.insertIndexation(23, 23);
+		  //db.insertIndexation(23, 23);
 		  matcher.setDatabaseMgmt(db);
-		  matcherTest();
+		  //matcherTest();
 		  
 		  db.closeDB();
 	  }
 	  
 	  public static void matcherTest(){
+		  ArrayList<String> docs = new ArrayList<String>();
+		  docs = fillDb.listerRepertoire("/home/compagnon/Documents/5A/RI/RechercheInfos/RechercheInformation/CORPUS/CORPUS");
 		  //matcher.CleanRequest("Le compagnon de sa soeur est le coucou de sa femme");
-		  ArrayList<String> terms = matcher.CleanRequest("Le compagnon de son chat est le coucou de sa femme");
-		  ArrayList<String> docs = new ArrayList<>();
-		  docs.add("D1");
-		  docs.add("D2");
-		  //matcher.SumTermFrequency( terms, "D2");
-		  matcher.MatcherDocWords(terms, docs);
+		  ArrayList<String> terms = matcher.CleanRequest("personnes, Intouchables");
+		  //matcher.SumTermFrequency( terms, "D15.html");
+		  Object[] mapTrier = matcher.MatcherDocWords(terms, docs);
+		  for (Object e : mapTrier) {
+				System.out.println(((Map.Entry<String, Integer>) e).getKey() + " : "
+						+ ((Map.Entry<String, Integer>) e).getValue());
+			}
 	  }
 }

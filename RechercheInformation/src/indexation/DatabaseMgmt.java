@@ -152,8 +152,8 @@ public class DatabaseMgmt {
 		try {
 			stmt = c.createStatement();
 			//System.out.println(word);
-			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) as count, OCC AS occ FROM INDEXTABLE WHERE IDDOC=(SELECT ID FROM WORDS WHERE NAME="+'"'+word+'"'+") and IDWORD=(SELECT ID FROM DOCS WHERE NAME="+'"'+doc+'"'+");" );
-			if (rs.getInt("count")!=0){
+			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) as count, OCC AS occ FROM INDEXTABLE WHERE IDDOC=(SELECT ID FROM DOCS WHERE NAME="+'"'+doc+'"'+") and IDWORD=(SELECT ID FROM WORDS WHERE NAME="+'"'+word+'"'+");" );
+			if (rs.getInt("count")!= 0){
 				occ = rs.getInt("occ");
 			}
 		} catch (SQLException e) {
