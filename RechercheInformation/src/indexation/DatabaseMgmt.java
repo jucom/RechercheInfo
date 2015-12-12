@@ -90,11 +90,11 @@ public class DatabaseMgmt {
 			stmt = c.createStatement();
 			String sql = "";
 			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM "+ tableName +";" );
-			System.out.println("rs = " + rs.getInt("count"));
+			//System.out.println("rs = " + rs.getInt("count"));
 			if (rs.getInt("count") == 0) {
 				//On insere la premiere ligne de la table
 				sql = "INSERT INTO "+tableName+" (ID,NAME) " + "VALUES (1,"+'"'+value+'"'+");";
-				System.out.println(sql);
+				//System.out.println(sql);
 				stmt.executeUpdate(sql);
 				// sinon, occ++
 			} else {
@@ -102,7 +102,7 @@ public class DatabaseMgmt {
 				stmt = c.createStatement();
 				//parsage des docs récupération infos
 				sql = "INSERT INTO "+tableName+" (NAME) " + "VALUES ("+'"'+value+'"'+");";
-				System.out.println(sql);
+				//System.out.println(sql);
 				stmt.executeUpdate(sql);
 				stmt.close();
 				c.commit();
@@ -111,7 +111,7 @@ public class DatabaseMgmt {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			System.exit(0);
 		}
-		System.out.println("Records created successfully");
+		//System.out.println("Records created successfully");
 	}
 
 	public void insertIndexation(int idWord, int idDoc){
@@ -122,10 +122,10 @@ public class DatabaseMgmt {
 			// si le couple n'existe pas encore dans la table : l'ajouter
 			String sql = "";
 			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
-			System.out.println(rs.getInt("count"));
+			//System.out.println(rs.getInt("count"));
 			if (rs.getInt("count") == 0) {
 				sql = "INSERT INTO INDEXTABLE (IDWORD,IDDOC,OCC) " + "VALUES ("+idWord+","+idDoc+","+"1);";
-				System.out.println(sql);
+				//System.out.println(sql);
 				stmt.executeUpdate(sql);
 				// sinon, occ++
 			} else {
@@ -142,7 +142,7 @@ public class DatabaseMgmt {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Records created successfully");
+		//System.out.println("Records created successfully");
 	}
 
 	public int getOccWordDoc(String word, String doc){
