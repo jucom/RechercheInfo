@@ -8,13 +8,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Matcher {
 	DatabaseMgmt db;
+	
 	public Matcher() {
 		this.db = new DatabaseMgmt();
-		// TODO Auto-generated constructor stub
 	}
 
 	public void setDatabaseMgmt(DatabaseMgmt db){
@@ -33,7 +32,7 @@ public class Matcher {
 
 	public int SumTermFrequency(ArrayList<String> termes, String doc){
 		int tf = 0;
-		//Pour chaque termes on cherche le nombre d'occurrence dans le Doc
+		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
 		for (String t : termes)  {
 			int rs = 0;
 			//On met à jour la somme des tf

@@ -145,7 +145,6 @@ public class Parser {
 	}
 	
 	public static ArrayList<String> parsing(File filePath, String stopListPath) {
-		//File input = new File(filePath);
 		String[] isoFiles = {"D110.html","D125.html","D77.html","D93.html"};
 		String[] unknown8bitFiles = {"D117.html","D118.html","D12.html","D44.html","D46.html","D49.html","D75.html","D89.html","D90.html"};
 		String s = null;
@@ -173,10 +172,8 @@ public class Parser {
 	}
 
 	public static void main( String args[] ){
-		//String input = "/home/jriviere/Bureau/RI/CORPUS/CORPUS/D110.html";
-		String input = "C:/Users/User/Documents/INSA/5IL/RerchercheInformation/CORPUS/CORPUS/D90.html";
-		String stopListPath = "C:/Users/User/Documents/GitHub/RechercheInfo/RechercheInformation/stopliste.txt";
-		//String stopListPath = "/home/jriviere/workspace/RechercheInfo/RechercheInformation/stopliste.txt";
+		String input = "./CORPUS/CORPUS/D90.html";
+		String stopListPath = "./stopliste.txt";
 		File inputFile = new File(input);
 		ArrayList<String> result = new ArrayList<String>();
 		result = parsing(inputFile, stopListPath);
