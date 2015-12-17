@@ -15,6 +15,7 @@ public class Request {
 	private int rappel;
 	private int precision;
 	private Object[] listDoc;
+	private ArrayList<RequestRelevance> listRelevanceDocs;
 	
 	
 	public Request(String name) {
@@ -37,19 +38,71 @@ public class Request {
 			if (list != null) {
 				r.setReq(list.get(0));
 				r.setCleanReq(Cleaner.cleanString(r.getReq()));
-				System.out.println(r.getReq());
-				Cleaner.printStringArrayList(r.getCleanReq());
+				//System.out.println(r.getReq());
+				//Cleaner.printStringArrayList(r.getCleanReq());
+				// /!\ nbDocFinded set in getPertinenceOfReq
+				r.setListRelevanceDocs(getPertinenceOfReq(path+"qrels/"+name,r));
+				/*
+				for (RequestRelevance r2 : r.getListRelevanceDocs()) {
+					System.out.println(r2.getDoc()+" , "+r2.getRelevance());
+				}
+				*/
+				r.setNbDocPertinent(r.getListRelevanceDocs().size());
+				//System.out.println("nb docs pertinents :"+r.getNbDocPertinent());
+				//System.out.println("nb docs trouves :"+r.getNbDocFinded());
 			}
-			//nbDOcpertinentReq
-			
 			reqs.add(r);
 		}
 		return reqs;
 	}
 	
+	public static ArrayList<RequestRelevance> getPertinenceOfReq(String path, Request r) {
+		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<RequestRelevance> listRelevanceDocs = new ArrayList<RequestRelevance>();
+		try {
+			// list represente le contenu du document 
+			list = FileManager.readFileContent(path, "utf-8");
+			r.setNbDocFinded(list.size());
+			// pour chaque ligne du document
+			for (String s: list) {
+				String[] tokens = Cleaner.tokenize(s);
+				/* tokens[0] = Di 
+				 * tokens[1] = html
+				 * tokens[2] = score
+				 * tokens[3] = score decimal (optional)
+				 */
+				// robustesse : normalement tokens[i] avec i < 3 n'est jamais null
+				if (tokens.length >= 3) {
+					if (Integer.parseInt(tokens[2]) == 1) {
+						RequestRelevance reqRel = new RequestRelevance(tokens[0]+"."+tokens[1], 1);
+						listRelevanceDocs.add(reqRel);
+					}
+					// if we have a decimal part
+					else if (tokens.length > 3) {
+						if (Integer.parseInt(tokens[3]) == 5) {
+							RequestRelevance reqRel = new RequestRelevance(tokens[0]+"."+tokens[1], 0.5);
+							listRelevanceDocs.add(reqRel);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return listRelevanceDocs;
+	}
+	
 	public static void testRequests() {
 		createListReq("./qrels/");
 	}
+	
+	public static void testPertinence() {
+		ArrayList<RequestRelevance> l = getPertinenceOfReq("./qrels/qrels/qrelQ1.txt",new Request("test"));
+		for (RequestRelevance r : l) {
+			System.out.println(r.getDoc()+" , "+r.getRelevance());
+		}
+	}
+		
 	
 	public static void main( String args[] ){
 		testRequests();
@@ -119,6 +172,14 @@ public class Request {
 
 	public void setPrecision(int precision) {
 		this.precision = precision;
+	}
+
+	public ArrayList<RequestRelevance> getListRelevanceDocs() {
+		return listRelevanceDocs;
+	}
+
+	public void setListRelevanceDocs(ArrayList<RequestRelevance> listRelevanceDocs) {
+		this.listRelevanceDocs = listRelevanceDocs;
 	}
 
 
