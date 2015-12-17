@@ -4,6 +4,7 @@ import java.util.Map;
 import Parser.FileManager;
 
 import matcher.Matcher;
+import matcher.Requete;
 import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
 
@@ -13,13 +14,17 @@ import indexation.FillDatabase;
 public class Main {
 	static FillDatabase fillDb = new FillDatabase();
 	static DatabaseMgmt db = new DatabaseMgmt();
-	//static Matcher matcher = new Matcher();
+	static Matcher matcher;
 	static int idWord = 1 ;
 	static int idDoc = 1 ; 
+	ArrayList<Requete> Reqs;
+	
+	
 	
 	  public static void main( String args[] ){
 		  db.loadDB();
 		  db.createTable();
+		  
 		  /*db.insertWordOrDoc("WORDS", "coucou");
 		  db.insertWordOrDoc("DOCS", "D2");
 		  db.insertWordOrDoc("WORDS", "chat");
@@ -36,7 +41,7 @@ public class Main {
 		  System.out.println(db.getID("WORDS", "coucou"));*/
 		  //db.insertIndexation(23, 23);
 		  //matcher.setDatabaseMgmt(db);
-		  matcherTest();
+		  //matcherTest();
 		  
 		  db.closeDB();
 	  }

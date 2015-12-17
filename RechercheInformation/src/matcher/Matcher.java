@@ -36,29 +36,33 @@ public class Matcher {
 		return listReq;
 	}
 
-	public int sumTermFrequency(ArrayList<String> termes, String doc){
+	public int sumTermFrequency(Requete r, String doc){
 		int tf = 0;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
-		for (String t : termes)  {
+		for (String t : r.getCleanReq())  {
 			int rs = 0;
 			//On met à jour la somme des tf
 			rs = db.getOccWordDoc(t, doc);
 			tf += rs;
+			if (rs!=0){
+				r.setNbDocFinded(r.getNbDocFinded()+1);
+			}
 		}
 		return tf;
 	}
+	
 	
 
 
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
 	//verifier le resultat !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	public Object[] MatcherDocWords(ArrayList<String> termes, ArrayList<String> docs){
+	public Object[] matcherDocWords(Requete req, ArrayList<String> docs){
 		//Pour tous les docs on calcules la sum des tfs et on les classes
 		Map<String,Integer> map = new HashMap<>();
 		System.out.println("declaration Map OK");
 		for (String doc :docs){
-			int res =  sumTermFrequency(termes, doc);
+			int res =  sumTermFrequency(req, doc);
 			map.put(doc, res);
 		}
 
@@ -84,9 +88,17 @@ public class Matcher {
 	 * @param docs
 	 * @return
 	 */
-	public Object[] MatcherDocReq(String req, ArrayList<String> docs){
-		return MatcherDocWords(CleanRequest(req),docs);
-		
+	public Object[] matcherDocReq(Requete req, ArrayList<String> docs){
+		return matcherDocWords(req,docs);
+	}
+	
+	public void matchAll(ArrayList<String> docs){
+		Performance p = new Performance(docs);
+		for (Requete r : reqs){
+			r.setListDoc(matcherDocReq(r,docs));
+			p.rappel(r);
+			p.precision(r);
+		}
 	}
 	
 

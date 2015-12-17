@@ -2,6 +2,8 @@ package matcher;
 
 import java.util.ArrayList;
 
+import Parser.FileManager;
+
 public class Requete {
 	private String name;
 	private String req;
@@ -10,11 +12,37 @@ public class Requete {
 	private int nbDocFinded;
 	private int rappel;
 	private int precision;
+	private Object[] listDoc;
 	
-	public Requete() {
-		super();
-		// TODO Auto-generated constructor stub
+	
+	public Requete(String name) {
+		this.name = name;
+		this.nbDocFinded = 0;
+		this.nbDocPertinent = 0;
 	}
+	
+	public static ArrayList<Requete> createListReq(String path) {
+		ArrayList<Requete> reqs = new ArrayList<Requete>();
+		ArrayList<String> reqDoc = FileManager.listerRepertoire(path);
+		for (String name : reqDoc){
+			Requete r = new Requete(name);
+			//Get Req and clean it
+			//nbDOcpertinentReq
+			
+			reqs.add(r);
+		}
+		return reqs;
+	}
+	
+	
+	public Object[] getListDoc() {
+		return listDoc;
+	}
+
+	public void setListDoc(Object[] listDoc) {
+		this.listDoc = listDoc;
+	}
+
 	
 	public String getName() {
 		return name;
