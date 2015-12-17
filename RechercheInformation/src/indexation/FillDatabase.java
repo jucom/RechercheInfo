@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import Parser.FileManager;
 import Parser.Parser;
 
 public class FillDatabase {
@@ -55,7 +56,7 @@ public class FillDatabase {
 		}		
 	}
 
-	public ArrayList<String> listerRepertoire(String rep){
+	/*public ArrayList<String> listerRepertoire(String rep){
 		File repertoire = new File(rep);
 		String [] listefichiers = null;
 		ArrayList<String> list = null;
@@ -68,17 +69,17 @@ public class FillDatabase {
 			        iterator.remove();
 			    }
 			}
-			/*
+			
 			for (String s : list) {
 				System.out.println(s);
-			}*/
+			}
 		}
 		return list;
-	}
+	}*/
 	
 	public void fillDatabaseWithAllFiles() {
 		ArrayList<String> listRep = new ArrayList<String>();
-		listRep = listerRepertoire(this.docsPath);
+		listRep = FileManager.listerRepertoire(this.docsPath);
 		String input = null;
 		db.initDB();		
 		for (String file : listRep) {

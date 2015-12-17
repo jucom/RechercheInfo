@@ -67,6 +67,8 @@ public class Matcher {
 		}*/
 		return mapTrier;
 	}
+	
+	
 
 	public static void printMap(Map<String, Integer> map) {
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {

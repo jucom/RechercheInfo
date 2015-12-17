@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Map;
 
+import Parser.FileManager;
+
 import matcher.Matcher;
 import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
@@ -34,14 +36,14 @@ public class Main {
 		  System.out.println(db.getID("WORDS", "coucou"));*/
 		  //db.insertIndexation(23, 23);
 		  matcher.setDatabaseMgmt(db);
-		  //matcherTest();
+		  matcherTest();
 		  
 		  db.closeDB();
 	  }
 	  
 	  public static void matcherTest(){
 		  ArrayList<String> docs = new ArrayList<String>();
-		  docs = fillDb.listerRepertoire("/home/compagnon/Documents/5A/RI/RechercheInfos/RechercheInformation/CORPUS/CORPUS");
+		  docs = FileManager.listerRepertoire("/home/compagnon/Documents/5A/RI/RechercheInfos/RechercheInformation/CORPUS/CORPUS");
 		  //matcher.CleanRequest("Le compagnon de sa soeur est le coucou de sa femme");
 		  ArrayList<String> terms = matcher.CleanRequest("personnes, Intouchables");
 		  //matcher.SumTermFrequency( terms, "D15.html");
