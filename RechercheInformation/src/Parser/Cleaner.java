@@ -11,17 +11,24 @@ public class Cleaner {
 		return cleaned;
 	}
 
+	// remove numbers
 	public static String removeNumbers(String s) {
 		String cleaned = s.replaceAll("\\p{Digit}","");
 		return cleaned;
 	}
-
+	
+	public static String normalize(String input) {
+		return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
+	}
+	
+	// split words
 	public static String[] tokenize(String s) {
 		//StringTokenizer multiTokenizer = new StringTokenizer(s, " !#$%&'()*–+,-./:;<=>?@[]^_`{|}\t\n\r~");
 		String[] tokens = s.split("[\\s\\p{Punct}]+");
 		return tokens;
 	}
 
+	// troncate (7 chars) and clean some special chars
 	public static ArrayList<String> troncate(String[] tokens) {
 		ArrayList<String> tokenList = new ArrayList<String>();
 		String s2 = null;
@@ -45,6 +52,16 @@ public class Cleaner {
 		}
 		return tokenList;		
 	}
+	
+	public static ArrayList<String> cleanString(String s) {
+		ArrayList<String> list = new ArrayList<String>();
+		s = normalize(s);
+		s = removeNumbers(s);
+		s = clean(s);
+		String[] tokens = tokenize(s);
+		list = troncate(tokens);
+		return list;
+	}
 
 	public static void printStringArrayList(ArrayList<String> list) {
 		for (String e : list) {
@@ -52,9 +69,6 @@ public class Cleaner {
 		}
 	}
 
-	public static String normalize(String input) {
-		return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
-	}
 
 
 }

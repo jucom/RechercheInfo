@@ -2,7 +2,6 @@ package matcher;
 
 import indexation.DatabaseMgmt;
 import Parser.Cleaner;
-import Parser.Parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +28,8 @@ public class Matcher {
 
 	//cree un tableau de string avec les mots pertinents
 	public ArrayList<String> CleanRequest(String req){
-		req = Cleaner.clean(req);
-		req = Cleaner.removeNumbers(req);
-		String[]tabReq = Cleaner.tokenize(req);
-		ArrayList<String> listReq = Cleaner.troncate(tabReq);
-		Cleaner.printStringArrayList(listReq);
+		ArrayList<String> listReq = Cleaner.cleanString(req);
+		//Cleaner.printStringArrayList(listReq);
 		return listReq;
 	}
 

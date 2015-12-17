@@ -73,11 +73,7 @@ public class Parser {
 		else {
 			s = parseDocument(filePath,"utf-8");
 		}
-		s = Cleaner.normalize(s);
-		s = Cleaner.removeNumbers(s);
-		s = Cleaner.clean(s);
-		String[] tokens = Cleaner.tokenize(s);
-		list = Cleaner.troncate(tokens);
+		list = Cleaner.cleanString(s);
 		try {
 			ArrayList<String> stopList = FileManager.readFileContent(stopListPath,"iso-8859-1");
 			list = deleteTokensFromStopList(list,stopList);

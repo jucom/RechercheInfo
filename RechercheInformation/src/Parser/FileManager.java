@@ -1,5 +1,7 @@
 package Parser;
 
+import indexation.FillDatabase;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,6 +37,10 @@ public class FileManager {
 		}
 		return list;
 	}
+	
+	public static ArrayList<String> listerRepertoire(){
+		return listerRepertoire("./CORPUS/CORPUS/");
+	}
 
 	public static ArrayList<String> readFileContent(final String fileName, final String encoding) throws IOException {
 		// Recuperation du fichier
@@ -59,6 +65,5 @@ public class FileManager {
 		input.close();
 		return list;
 	}
-
-
+	
 }
