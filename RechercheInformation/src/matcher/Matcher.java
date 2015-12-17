@@ -1,7 +1,7 @@
 package matcher;
 
 import indexation.DatabaseMgmt;
-import indexation.Parser;
+import Parser.Parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;

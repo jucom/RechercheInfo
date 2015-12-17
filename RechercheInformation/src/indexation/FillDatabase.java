@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import Parser.Parser;
+
 public class FillDatabase {
 	
 	DatabaseMgmt db;
