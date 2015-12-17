@@ -1,7 +1,5 @@
 package Parser;
 
-import indexation.FillDatabase;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,20 +8,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-
-import matcher.Requete;
 
 public class FileManager {
 
+	
 	public static ArrayList<String> listerRepertoire(String path){
 		File repertoire = new File(path);
-		String [] listefichiers = null;
-		ArrayList<String> list = null;
+		File [] listefichiers = null;
+		ArrayList<String> list = new ArrayList<String>();
 		if (repertoire.isDirectory()) {
-			listefichiers=repertoire.list();
-			list = new ArrayList<String>(Arrays.asList(listefichiers));
+			listefichiers=repertoire.listFiles();
+			for (File f:listefichiers) {
+				if (!f.isDirectory()) {
+					list.add(f.getName());
+				}
+			}
 			for (Iterator<String> iterator = list.iterator(); iterator.hasNext(); ) {
 				String doc = iterator.next();
 				if (doc.endsWith("#")) {
@@ -41,6 +41,7 @@ public class FileManager {
 	public static ArrayList<String> listerRepertoire(){
 		return listerRepertoire("./CORPUS/CORPUS/");
 	}
+	
 
 	public static ArrayList<String> readFileContent(final String fileName, final String encoding) throws IOException {
 		// Recuperation du fichier

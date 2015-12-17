@@ -4,7 +4,7 @@ import java.util.Map;
 import Parser.FileManager;
 
 import matcher.Matcher;
-import matcher.Requete;
+import matcher.Request;
 import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
 
@@ -17,7 +17,7 @@ public class Main {
 	static Matcher matcher;
 	static int idWord = 1 ;
 	static int idDoc = 1 ; 
-	ArrayList<Requete> Reqs;
+	ArrayList<Request> Reqs;
 	
 	
 	

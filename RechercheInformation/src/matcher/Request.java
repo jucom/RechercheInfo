@@ -1,10 +1,12 @@
 package matcher;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import Parser.Cleaner;
 import Parser.FileManager;
 
-public class Requete {
+public class Request {
 	private String name;
 	private String req;
 	private ArrayList<String> cleanReq;
@@ -15,23 +17,42 @@ public class Requete {
 	private Object[] listDoc;
 	
 	
-	public Requete(String name) {
+	public Request(String name) {
 		this.name = name;
 		this.nbDocFinded = 0;
 		this.nbDocPertinent = 0;
 	}
 	
-	public static ArrayList<Requete> createListReq(String path) {
-		ArrayList<Requete> reqs = new ArrayList<Requete>();
+	public static ArrayList<Request> createListReq(String path) {
+		ArrayList<Request> reqs = new ArrayList<Request>();
 		ArrayList<String> reqDoc = FileManager.listerRepertoire(path);
+		ArrayList<String> list = new ArrayList<String>();
 		for (String name : reqDoc){
-			Requete r = new Requete(name);
-			//Get Req and clean it
+			Request r = new Request(name);
+			try {
+				list = FileManager.readFileContent(path+name, "utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if (list != null) {
+				r.setReq(list.get(0));
+				r.setCleanReq(Cleaner.cleanString(r.getReq()));
+				System.out.println(r.getReq());
+				Cleaner.printStringArrayList(r.getCleanReq());
+			}
 			//nbDOcpertinentReq
 			
 			reqs.add(r);
 		}
 		return reqs;
+	}
+	
+	public static void testRequests() {
+		createListReq("./qrels/");
+	}
+	
+	public static void main( String args[] ){
+		testRequests();
 	}
 	
 	
