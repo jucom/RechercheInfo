@@ -9,11 +9,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author compagnon
+ *
+ */
 public class Matcher {
 	DatabaseMgmt db;
+	ArrayList<Requete> reqs;
 	
-	public Matcher() {
+	public Matcher(ArrayList<Requete> reqs) {
 		this.db = new DatabaseMgmt();
+		this.reqs = reqs;
 	}
 
 	public void setDatabaseMgmt(DatabaseMgmt db){
@@ -30,7 +36,7 @@ public class Matcher {
 		return listReq;
 	}
 
-	public int SumTermFrequency(ArrayList<String> termes, String doc){
+	public int sumTermFrequency(ArrayList<String> termes, String doc){
 		int tf = 0;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
 		for (String t : termes)  {
@@ -41,6 +47,8 @@ public class Matcher {
 		}
 		return tf;
 	}
+	
+
 
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
@@ -50,7 +58,7 @@ public class Matcher {
 		Map<String,Integer> map = new HashMap<>();
 		System.out.println("declaration Map OK");
 		for (String doc :docs){
-			int res =  SumTermFrequency(termes, doc);
+			int res =  sumTermFrequency(termes, doc);
 			map.put(doc, res);
 		}
 
@@ -68,6 +76,18 @@ public class Matcher {
 		return mapTrier;
 	}
 	
+	
+
+	/**
+	 * Permet de calculer le tf pour chaque document d'après la requête donnée
+	 * @param req
+	 * @param docs
+	 * @return
+	 */
+	public Object[] MatcherDocReq(String req, ArrayList<String> docs){
+		return MatcherDocWords(CleanRequest(req),docs);
+		
+	}
 	
 
 	public static void printMap(Map<String, Integer> map) {

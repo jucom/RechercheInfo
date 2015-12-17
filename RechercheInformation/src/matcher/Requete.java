@@ -1,10 +1,20 @@
 package matcher;
 
+import java.util.ArrayList;
+
 public class Requete {
 	private String name;
 	private String req;
+	private ArrayList<String> cleanReq;
 	private int nbDocPertinent;
 	private int nbDocFinded;
+	private int rappel;
+	private int precision;
+	
+	public Requete() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 	public String getName() {
 		return name;
@@ -12,6 +22,14 @@ public class Requete {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public ArrayList<String> getCleanReq() {
+		return cleanReq;
+	}
+
+	public void setCleanReq(ArrayList<String> cleanReq) {
+		this.cleanReq = cleanReq;
 	}
 
 	public int getNbDocFinded() {
@@ -22,9 +40,6 @@ public class Requete {
 		this.nbDocFinded = nbDocFinded;
 	}
 
-	private int rappel;
-	private int precision;
-	
 	public String getReq() {
 		return req;
 	}
@@ -57,8 +72,5 @@ public class Requete {
 		this.precision = precision;
 	}
 
-	public Requete() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+
 }
