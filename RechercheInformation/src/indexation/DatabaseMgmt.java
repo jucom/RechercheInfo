@@ -122,17 +122,19 @@ public class DatabaseMgmt {
 			// si le couple n'existe pas encore dans la table : l'ajouter
 			String sql = "";
 			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
-			//System.out.println(rs.getInt("count"));
+			System.out.println(rs.getInt("count"));
 			if (rs.getInt("count") == 0) {
 				sql = "INSERT INTO INDEXTABLE (IDWORD,IDDOC,OCC) " + "VALUES ("+idWord+","+idDoc+","+"1);";
 				//System.out.println(sql);
 				stmt.executeUpdate(sql);
 				// sinon, occ++
 			} else {
-				ResultSet rsOcc = stmt.executeQuery( "SELECT OCC FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
+				//ResultSet rsOcc = stmt.executeQuery( "SELECT OCC FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
 				int nbOcc = Integer.parseInt(rs.getString("OCC"));
 				nbOcc++;
+				//System.out.println(nbOcc);
 				sql = "UPDATE INDEXTABLE set OCC = "+nbOcc+" WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";";
+				//System.out.println(sql);
 				stmt.executeUpdate(sql);
 			}
 			stmt.close();
