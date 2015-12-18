@@ -4,6 +4,7 @@ import java.util.Map;
 import Parser.FileManager;
 
 import matcher.Matcher;
+import matcher.Performance;
 import matcher.Request;
 import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
@@ -46,16 +47,18 @@ public class Main {
 		  //On charge le Corpus
 		  docs = FileManager.listerRepertoire("./CORPUS/CORPUS/");
 		  
-		  //On charge les requêtes
+		  //On charge les requetes
 		  reqs = Request.createListReq("./qrels/");
 		  
 		  //On initialise le matcher avec la liste des requêtes et des docs
-		  matcher = new Matcher(reqs);
+		  matcher = new Matcher(reqs, db);
 		  
+		  Performance p = new Performance(docs);
 		  //On met en route le matcher
 		  matcher.matchAll(docs);
 		  for (Request r : reqs){
 			  System.out.println(r);
+			  System.out.println(p.rappel(r, 5)+p.rappel(r, 15)+p.rappel(r, 25)+p.precision(r, 5)+p.precision(r, 15)+p.precision(r, 25));
 		  }
 		  
 		
