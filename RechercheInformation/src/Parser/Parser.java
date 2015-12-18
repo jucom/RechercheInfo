@@ -10,7 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
 
 public class Parser {
 	
@@ -23,15 +22,11 @@ public class Parser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		Elements h1 = doc.select("h1");
-		for (Element e : h1) {
-			System.out.println("h1 " + e.data()+" fin h1");
-		}
 	    StringBuilder builder = new StringBuilder();
 
 	    for ( Element element : doc.getAllElements() )
 	    {
+	    		    	
 	        for ( TextNode textNode : element.textNodes() )
 	        {
 	            final String text = textNode.text();
@@ -67,17 +62,22 @@ public class Parser {
 		return list;
 	}
 	
-	public static ArrayList<String> parsing(File filePath, String stopListPath) {
+	public static String initParsing(File filePath) {
 		String[] isoFiles = {"D110.html","D125.html","D77.html","D93.html"};
 		String[] unknown8bitFiles = {"D117.html","D118.html","D12.html","D44.html","D46.html","D49.html","D75.html","D89.html","D90.html"};
 		String s = null;
-		ArrayList<String> list = new ArrayList<String>();
 		if(Arrays.asList(isoFiles).contains(filePath.getName()) || Arrays.asList(unknown8bitFiles).contains(filePath.getName())) {
 			s = parseDocument(filePath,"iso-8859-1");
 		}
 		else {
 			s = parseDocument(filePath,"utf-8");
 		}
+		return s;
+	}
+	
+	public static ArrayList<String> parsing(File filePath, String stopListPath) {
+		ArrayList<String> list = new ArrayList<String>();
+		String s = initParsing(filePath);
 		list = Cleaner.cleanString(s);
 		try {
 			ArrayList<String> stopList = FileManager.readFileContent(stopListPath,"iso-8859-1");
