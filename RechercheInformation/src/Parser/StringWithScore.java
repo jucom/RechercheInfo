@@ -1,11 +1,16 @@
 package Parser;
 
+import java.util.ArrayList;
+
+
 public class StringWithScore {
 	
 	// score du string : depend de la balise dans laquelle le string se trouve
-	public int score;
+	private int score;
 	// contenu du string
-	public String content;
+	private String content;
+	// contenu nettoyé et tokenisé
+	private ArrayList<String> cleanedContentList;
 	
 	public StringWithScore() {
 		this.score = 1;
@@ -32,6 +37,15 @@ public class StringWithScore {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	public ArrayList<String> getCleanedContentList() {
+		return cleanedContentList;
+	}
+
+	public void setCleanedContentList(ArrayList<String> cleanedContentList) {
+		this.cleanedContentList = cleanedContentList;
+	}
+
 	
 	
 

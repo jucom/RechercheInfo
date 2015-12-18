@@ -2,6 +2,7 @@ package Parser;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Cleaner {
 
@@ -27,6 +28,7 @@ public class Cleaner {
 		String[] tokens = s.split("[\\s\\p{Punct}]+");
 		return tokens;
 	}
+	
 
 	// troncate (7 chars) and clean some special chars
 	public static ArrayList<String> troncate(String[] tokens) {
@@ -53,6 +55,12 @@ public class Cleaner {
 		return tokenList;		
 	}
 	
+	// troncate (7 chars) and clean some special chars
+	public static void troncateWithScore(String[] tokens, StringWithScore sws) {
+		ArrayList<String> tokenList = troncate(tokens);
+		sws.setCleanedContentList(tokenList);
+	}
+	
 	public static ArrayList<String> cleanString(String s) {
 		ArrayList<String> list = new ArrayList<String>();
 		s = normalize(s);
@@ -61,6 +69,26 @@ public class Cleaner {
 		String[] tokens = tokenize(s);
 		list = troncate(tokens);
 		return list;
+	}
+	
+	public static void cleanStringWithScore(ArrayList<StringWithScore> s) {
+		for (StringWithScore sws : s) {
+			sws.setContent(normalize(sws.getContent()));
+			sws.setContent(removeNumbers(sws.getContent()));
+			sws.setContent(clean(sws.getContent()));
+			String[] tokens = tokenize(sws.getContent());
+			troncateWithScore(tokens, sws);
+		}
+	}
+	
+	public static void cleanListOfStringWithScore(ArrayList<StringWithScore> s) {
+		Iterator<StringWithScore> iterator = s.iterator();
+		while (iterator.hasNext()) {
+			StringWithScore sws = iterator.next();
+			if (sws.getCleanedContentList().isEmpty()) {
+				iterator.remove();
+			}
+		}				
 	}
 
 	public static void printStringArrayList(ArrayList<String> list) {

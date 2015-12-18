@@ -38,6 +38,7 @@ public class ParserWithTags extends Parser {
 	        	
 	            final String text = textNode.text();
 	            if (!(text.equals(" "))) {
+	            	textAndScore.setContent(text);
 	            	listOfTextWithScore.add(textAndScore);
 	            }
 	        }
@@ -58,28 +59,31 @@ public class ParserWithTags extends Parser {
 		return s;
 	}
 	
-	public static ArrayList<String> parsingWithTags(File filePath, String stopListPath) {
-		ArrayList<String> list = new ArrayList<String>();
-		ArrayList<StringWithScore> s = initParsingWithTags(filePath);
-		//list = Cleaner.cleanString(s);
-		/*
+	public static ArrayList<StringWithScore> parsingWithTags(File filePath, String stopListPath) {
+		ArrayList<StringWithScore> listOfStringsWithScore = initParsingWithTags(filePath);
+		Cleaner.cleanStringWithScore(listOfStringsWithScore);
 		try {
 			ArrayList<String> stopList = FileManager.readFileContent(stopListPath,"iso-8859-1");
-			list = deleteTokensFromStopList(list,stopList);
+			for (StringWithScore sws : listOfStringsWithScore) {
+				sws.setCleanedContentList(deleteTokensFromStopList(sws.getCleanedContentList(),stopList));
+			}
+			Cleaner.cleanListOfStringWithScore(listOfStringsWithScore);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		*/
-		return list;
+		return listOfStringsWithScore;
 	}
 	
 	public static void testParserWithTags() {
 		String input = "./CORPUS/CORPUS/D88.html";
 		String stopListPath = "./stopliste.txt";
 		File inputFile = new File(input);
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<StringWithScore> result = new ArrayList<StringWithScore>();
 		result = parsingWithTags(inputFile, stopListPath);
-		Cleaner.printStringArrayList(result);
+		for (StringWithScore sws : result) {
+			Cleaner.printStringArrayList(sws.getCleanedContentList());
+			System.out.println("Score:"+sws.getScore());
+		}			
 	}
 	
 	public static void main( String args[] ){
