@@ -54,7 +54,6 @@ public class DatabaseMgmt {
 	public boolean wordExists(String word) {
 		Statement stmt = null;
 		try {
-			//c.setAutoCommit(false);
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM WORDS WHERE NAME="+'"'+word+'"'+";" );
 			if (rs.getInt("count") == 0) {

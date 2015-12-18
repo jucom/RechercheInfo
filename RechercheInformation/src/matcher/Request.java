@@ -12,6 +12,7 @@ public class Request {
 	private ArrayList<String> cleanReq;
 	private int nbDocPertinent;
 	private int nbDocFinded;
+	private int nbDocsInQrels;
 	private int rappel;
 	private int precision;
 	private Object[] listDoc;
@@ -22,6 +23,7 @@ public class Request {
 		this.name = name;
 		this.nbDocFinded = 0;
 		this.nbDocPertinent = 0;
+		this.nbDocsInQrels = 0 ;
 	}
 	
 	public static ArrayList<Request> createListReq(String path) {
@@ -38,7 +40,7 @@ public class Request {
 			if (list != null) {
 				r.setReq(list.get(0));
 				r.setCleanReq(Cleaner.cleanString(r.getReq()));
-				// /!\ nbDocFinded set in getPertinenceOfReq
+				// /!\ nbDocInQrels set in getPertinenceOfReq
 				r.setListRelevanceDocs(getPertinenceOfReq(path+"qrels/"+name,r));
 				/*
 				for (RequestRelevance r2 : r.getListRelevanceDocs()) {
@@ -58,7 +60,7 @@ public class Request {
 		try {
 			// list represente le contenu du document 
 			list = FileManager.readFileContent(path, "utf-8");
-			r.setNbDocFinded(list.size());
+			r.setNbDocsInQrels(list.size());
 			// pour chaque ligne du document
 			for (String s: list) {
 				String[] tokens = Cleaner.tokenize(s);
@@ -94,7 +96,7 @@ public class Request {
 			System.out.println(r.getReq());
 			Cleaner.printStringArrayList(r.getCleanReq());
 			System.out.println("nb docs pertinents :"+r.getNbDocPertinent());
-			System.out.println("nb docs trouves :"+r.getNbDocFinded());
+			System.out.println("nb docs trouves dans qrels :"+r.getNbDocsInQrels());
 		}
 	}
 	
@@ -182,6 +184,14 @@ public class Request {
 
 	public void setListRelevanceDocs(ArrayList<RequestRelevance> listRelevanceDocs) {
 		this.listRelevanceDocs = listRelevanceDocs;
+	}
+
+	public int getNbDocsInQrels() {
+		return nbDocsInQrels;
+	}
+
+	public void setNbDocsInQrels(int nbDocsInQrels) {
+		this.nbDocsInQrels = nbDocsInQrels;
 	}
 
 

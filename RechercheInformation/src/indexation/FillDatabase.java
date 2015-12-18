@@ -75,7 +75,7 @@ public class FillDatabase {
 		}	
 	}
 	
-	public void fillDatabaseWithAllFiles() {
+	public void fillDatabaseWithAllFiles(boolean optimization) {
 		ArrayList<String> listRep = new ArrayList<String>();
 		listRep = FileManager.listerRepertoire(this.docsPath);
 		String input = null;
@@ -84,7 +84,12 @@ public class FillDatabase {
 			input = this.docsPath+file;
 			System.out.println("*********");
 			System.out.println("FILE "+input);
-			fillDatabaseWithFileOptimized(input);
+			if (optimization) {
+				fillDatabaseWithFileOptimized(input);
+			}
+			else {
+				fillDatabaseWithFile(input);
+			}
 			System.out.println("*********");
 		}
 		db.closeDB();
@@ -113,12 +118,6 @@ public class FillDatabase {
 	public void setStopListPath(String stopListPath) {
 		this.stopListPath = stopListPath;
 	}
-	
-	public static void main( String args[] ){
-		FillDatabase fdb = new FillDatabase();
-		fdb.fillDatabaseWithAllFiles();
-		
-	}
 
 	public HashMap<String,Integer> getWordsInDB() {
 		return wordsInDB;
@@ -126,6 +125,12 @@ public class FillDatabase {
 
 	public void setWordsInDB(HashMap<String,Integer> wordsInDB) {
 		this.wordsInDB = wordsInDB;
+	}
+	
+	public static void main( String args[] ){
+		FillDatabase fdb = new FillDatabase();
+		fdb.fillDatabaseWithAllFiles(true);
+		
 	}
 
 }

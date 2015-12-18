@@ -10,6 +10,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 
 public class Parser {
 	
@@ -23,6 +24,10 @@ public class Parser {
 			e.printStackTrace();
 		}
 		
+		Elements h1 = doc.select("h1");
+		for (Element e : h1) {
+			System.out.println("h1 " + e.data()+" fin h1");
+		}
 	    StringBuilder builder = new StringBuilder();
 
 	    for ( Element element : doc.getAllElements() )
@@ -84,7 +89,7 @@ public class Parser {
 	}
 	
 	public static void testParser() {
-		String input = "./CORPUS/CORPUS/D90.html";
+		String input = "./CORPUS/CORPUS/D88.html";
 		String stopListPath = "./stopliste.txt";
 		File inputFile = new File(input);
 		ArrayList<String> result = new ArrayList<String>();
