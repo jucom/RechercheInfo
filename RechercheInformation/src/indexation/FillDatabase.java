@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import Parser.FileManager;
 import Parser.Parser;
+import Parser.ParserWithTags;
+import Parser.StringWithScore;
 
 public class FillDatabase {
 	
@@ -43,39 +45,46 @@ public class FillDatabase {
 		}		
 	}
 	
-	public void fillDatabaseWithFileOptimized(String input) {
+	// TODO
+	public void fillDatabaseWithFileOptimized(String input, boolean withTags) {
 		File inputFile = new File(input);
 		// on cree le document dans la table des documents 
 		db.insertWordOrDoc("DOCS", inputFile.getName());
 		int idDoc = db.getID("DOCS",inputFile.getName());
-		// on parse le document input
-		ArrayList<String> result = new ArrayList<String>();
-		result = Parser.parsing(inputFile, stopListPath);
 		IndexationStructure indexOfWords = new IndexationStructure(idDoc);
 		HashMap<Integer,Integer> map = indexOfWords.getMapIdWordFrequency();
-		// on ajoute tous les mots parsés dans la table
-		for (String word: result) {
-			if (! wordsInDB.containsKey(word)) {
-				// on ajoute le mot dans la table word
-				db.insertWordOrDoc("WORDS",word);
-				int idWord = db.getID("WORDS", word);
-				wordsInDB.put(word, idWord);
-			}
-			int idWord = wordsInDB.get(word);
-			if (! map.containsKey(idWord)) {
-				map.put(idWord, 1);
-			}	
-			map.put(idWord, map.get(idWord) + 1);
+		// on parse le document input
+		if (withTags) {
+			ArrayList<StringWithScore> list = ParserWithTags.parsingWithTags(inputFile,stopListPath);
+			// TODO
 		}
-		// insertion des mots dans la table indexation
-		for(Entry<Integer, Integer> entry : map.entrySet()) {
-			Integer key = entry.getKey();
-			Integer value = entry.getValue();
-			db.insertIndexationWithFrequency(key, idDoc, value);
-		}	
+		else {
+			ArrayList<String> result = Parser.parsing(inputFile, stopListPath);
+			// on ajoute tous les mots parsés dans la table
+			for (String word: result) {
+				if (! wordsInDB.containsKey(word)) {
+					// on ajoute le mot dans la table word
+					db.insertWordOrDoc("WORDS",word);
+					int idWord = db.getID("WORDS", word);
+					wordsInDB.put(word, idWord);
+				}
+				int idWord = wordsInDB.get(word);
+				if (! map.containsKey(idWord)) {
+					map.put(idWord, 1);
+				}	
+				map.put(idWord, map.get(idWord) + 1);
+			}
+			// insertion des mots dans la table indexation
+			for(Entry<Integer, Integer> entry : map.entrySet()) {
+				Integer key = entry.getKey();
+				Integer value = entry.getValue();
+				db.insertIndexationWithFrequency(key, idDoc, value);
+			}	
+		}
 	}
 	
-	public void fillDatabaseWithAllFiles(boolean optimization) {
+	// if withTags == true, optimization is not considered (true by default)
+	public void fillDatabaseWithAllFiles(boolean optimization, boolean withTags) {
 		ArrayList<String> listRep = new ArrayList<String>();
 		listRep = FileManager.listerRepertoire(this.docsPath);
 		String input = null;
@@ -84,8 +93,11 @@ public class FillDatabase {
 			input = this.docsPath+file;
 			System.out.println("*********");
 			System.out.println("FILE "+input);
-			if (optimization) {
-				fillDatabaseWithFileOptimized(input);
+			if (withTags) {
+				fillDatabaseWithFileOptimized(input,true);
+			}
+			else if (optimization) {
+				fillDatabaseWithFileOptimized(input,false);
 			}
 			else {
 				fillDatabaseWithFile(input);
@@ -129,7 +141,7 @@ public class FillDatabase {
 	
 	public static void main( String args[] ){
 		FillDatabase fdb = new FillDatabase();
-		fdb.fillDatabaseWithAllFiles(true);
+		fdb.fillDatabaseWithAllFiles(true,false);
 		
 	}
 
