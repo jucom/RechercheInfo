@@ -2,6 +2,7 @@ package matcher;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import Parser.Cleaner;
 import Parser.FileManager;
@@ -12,10 +13,10 @@ public class Request {
 	private ArrayList<String> cleanReq;
 	private int nbDocPertinent;
 	private int nbDocFinded;
+	
+
 	private int nbDocsInQrels;
-	private int rappel;
-	private int precision;
-	private Object[] listDoc;
+	private ArrayList<String> listDoc;
 	private ArrayList<RequestRelevance> listRelevanceDocs;
 	
 	
@@ -113,13 +114,16 @@ public class Request {
 	}*/
 	
 	
-	public Object[] getListDoc() {
+
+	public ArrayList<String> getListDoc() {
 		return listDoc;
 	}
 
-	public void setListDoc(Object[] listDoc) {
+	public void setListDoc(ArrayList<String> listDoc) {
 		this.listDoc = listDoc;
 	}
+
+
 
 	
 	public String getName() {
@@ -162,22 +166,6 @@ public class Request {
 		this.nbDocPertinent = nbDocPertinent;
 	}
 
-	public int getRappel() {
-		return rappel;
-	}
-
-	public void setRappel(int rappel) {
-		this.rappel = rappel;
-	}
-
-	public int getPrecision() {
-		return precision;
-	}
-
-	public void setPrecision(int precision) {
-		this.precision = precision;
-	}
-
 	public ArrayList<RequestRelevance> getListRelevanceDocs() {
 		return listRelevanceDocs;
 	}
@@ -194,8 +182,12 @@ public class Request {
 		this.nbDocsInQrels = nbDocsInQrels;
 	}
 	
-	public String toString(){
-		return ("name : " + name + "\n" + "request : " + req + "\n" + "rappel : " + rappel + "\n" + "precision : " + precision + "\n");
+	@Override
+	public String toString() {
+		return "Request [name=" + name + "\n req=" + req + "\n cleanReq="
+				+ cleanReq + "\n nbDocPertinent=" + nbDocPertinent
+				+ "\n nbDocFinded=" + nbDocFinded + "\n nbDocsInQrels="
+				+ nbDocsInQrels +  "]";
 	}
 	
 

@@ -16,9 +16,10 @@ import java.util.Map;
 public class Matcher {
 	DatabaseMgmt db;
 	ArrayList<Request> reqs;
+	final int NB_DOC_MAX = 25;
 
-	public Matcher(ArrayList<Request> reqs) {
-		this.db = new DatabaseMgmt();
+	public Matcher(ArrayList<Request> reqs, DatabaseMgmt db) {
+		this.db = db;
 		this.reqs = reqs;
 	}
 
@@ -40,9 +41,9 @@ public class Matcher {
 		for (String t : r.getCleanReq())  {
 			int rs = 0;
 			//On met à jour la somme des tf
-			System.out.println("rs : Ok");
+			//System.out.println("rs : Ok");
 			rs = db.getOccWordDoc(t, doc);
-			System.out.println("rs : " + rs);
+			//System.out.println("rs : " + rs);
 			tf += rs;
 			if (rs!=0){
 				r.setNbDocFinded(r.getNbDocFinded()+1);
@@ -51,14 +52,13 @@ public class Matcher {
 		return tf;
 	}
 	
-
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
 	//verifier le resultat !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	public Object[] matcherDocWords(Request req, ArrayList<String> docs){
+	public ArrayList<String> matcherDocWords(Request req, ArrayList<String> docs){
 		//Pour tous les docs on calcules la sum des tfs et on les classes
 		Map<String,Integer> map = new HashMap<>();
-		System.out.println("declaration Map OK");
+		//System.out.println("declaration Map OK");
 		for (String doc :docs){
 			int res =  sumTermFrequency(req, doc);
 			map.put(doc, res);
@@ -71,11 +71,19 @@ public class Matcher {
 						((Map.Entry<String, Integer>) o1).getValue());
 			}
 		});
-		/*for (Object e : mapTrier) {
-			System.out.println(((Map.Entry<String, Integer>) e).getKey() + " : "
-					+ ((Map.Entry<String, Integer>) e).getValue());
-		}*/
-		return mapTrier;
+		ArrayList<String> listDocFinded = new ArrayList<String>();
+		int i = 0;
+		for (Object e : mapTrier) {
+			listDocFinded.add(((Map.Entry<String, Integer>) e).getKey());
+			i ++;
+		}
+		
+		/*for (String s : listDocFinded) {
+			System.out.println(s);
+		}
+		System.out.println("");*/
+		
+		return listDocFinded;
 	}
 	
 	
@@ -86,7 +94,7 @@ public class Matcher {
 	 * @param docs
 	 * @return
 	 */
-	public Object[] matcherDocReq(Request req, ArrayList<String> docs){
+	public ArrayList<String> matcherDocReq(Request req, ArrayList<String> docs){
 		return matcherDocWords(req,docs);
 	}
 	
@@ -94,8 +102,8 @@ public class Matcher {
 		Performance p = new Performance(docs);
 		for (Request r : reqs){
 			r.setListDoc(matcherDocReq(r, docs));
-			p.rappel(r);
-			p.precision(r);
+			p.rappel(r,10);
+			p.precision(r,10);
 		}
 	}
 	
