@@ -26,12 +26,13 @@ public class Matcher {
 		this.db = db;
 	}
 
+	/*
 	//cree un tableau de string avec les mots pertinents
 	public ArrayList<String> CleanRequest(String req){
 		ArrayList<String> listReq = Cleaner.cleanString(req);
 		//Cleaner.printStringArrayList(listReq);
 		return listReq;
-	}
+	}*/
 
 	public int sumTermFrequency(Request r, String doc){
 		int tf = 0;
@@ -48,8 +49,6 @@ public class Matcher {
 		return tf;
 	}
 	
-	
-
 
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence

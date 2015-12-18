@@ -20,5 +20,6 @@ public class Performance {
 		int precision = req.getNbDocPertinent()/req.getNbDocFinded();
 		req.setPrecision(precision);
 	}
+
 	
 }

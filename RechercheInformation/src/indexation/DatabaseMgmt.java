@@ -146,6 +146,29 @@ public class DatabaseMgmt {
 		}
 		//System.out.println("Records created successfully");
 	}
+	
+	public void insertIndexationWithFrequency(int idWord, int idDoc, int freq){
+		Statement stmt = null;
+		try {
+			c.setAutoCommit(false);
+			stmt = c.createStatement();
+			String sql = "";
+			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
+			//System.out.println(rs.getInt("count"));
+			if (rs.getInt("count") == 0) {
+				sql = "INSERT INTO INDEXTABLE (IDWORD,IDDOC,OCC) " + "VALUES ("+idWord+","+idDoc+","+freq+");";
+				//System.out.println(sql);
+				stmt.executeUpdate(sql);
+			} 
+			stmt.close();
+			rs.close();
+			c.commit();
+		} catch ( Exception e ) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		//System.out.println("Records created successfully");
+	}
 
 	public int getOccWordDoc(String word, String doc){
 		Statement stmt;

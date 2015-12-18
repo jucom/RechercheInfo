@@ -38,8 +38,6 @@ public class Request {
 			if (list != null) {
 				r.setReq(list.get(0));
 				r.setCleanReq(Cleaner.cleanString(r.getReq()));
-				//System.out.println(r.getReq());
-				//Cleaner.printStringArrayList(r.getCleanReq());
 				// /!\ nbDocFinded set in getPertinenceOfReq
 				r.setListRelevanceDocs(getPertinenceOfReq(path+"qrels/"+name,r));
 				/*
@@ -48,8 +46,6 @@ public class Request {
 				}
 				*/
 				r.setNbDocPertinent(r.getListRelevanceDocs().size());
-				//System.out.println("nb docs pertinents :"+r.getNbDocPertinent());
-				//System.out.println("nb docs trouves :"+r.getNbDocFinded());
 			}
 			reqs.add(r);
 		}
@@ -93,7 +89,13 @@ public class Request {
 	}
 	
 	public static void testRequests() {
-		createListReq("./qrels/");
+		ArrayList<Request> list = createListReq("./qrels/");
+		for (Request r : list) {
+			System.out.println(r.getReq());
+			Cleaner.printStringArrayList(r.getCleanReq());
+			System.out.println("nb docs pertinents :"+r.getNbDocPertinent());
+			System.out.println("nb docs trouves :"+r.getNbDocFinded());
+		}
 	}
 	
 	public static void testPertinence() {
