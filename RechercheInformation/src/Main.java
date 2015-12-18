@@ -9,21 +9,20 @@ import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
 
 
-
-
 public class Main {
 	static FillDatabase fillDb = new FillDatabase();
 	static DatabaseMgmt db = new DatabaseMgmt();
 	static Matcher matcher;
 	static int idWord = 1 ;
 	static int idDoc = 1 ; 
-	ArrayList<Request> Reqs;
+	static ArrayList<Request> reqs  = new ArrayList<Request>();
+	static ArrayList<String> docs = new ArrayList<String>();
 	
 	
 	
 	  public static void main( String args[] ){
 		  db.loadDB();
-		  db.createTable();
+		 // db.createTable();
 		  
 		  /*db.insertWordOrDoc("WORDS", "coucou");
 		  db.insertWordOrDoc("DOCS", "D2");
@@ -43,6 +42,23 @@ public class Main {
 		  //matcher.setDatabaseMgmt(db);
 		  //matcherTest();
 		  
+
+		  //On charge le Corpus
+		  docs = FileManager.listerRepertoire("./CORPUS/CORPUS/");
+		  
+		  //On charge les requêtes
+		  reqs = Request.createListReq("./qrels/");
+		  
+		  //On initialise le matcher avec la liste des requêtes et des docs
+		  matcher = new Matcher(reqs);
+		  
+		  //On met en route le matcher
+		  matcher.matchAll(docs);
+		  for (Request r : reqs){
+			  System.out.println(r);
+		  }
+		  
+		
 		  db.closeDB();
 	  }
 	  

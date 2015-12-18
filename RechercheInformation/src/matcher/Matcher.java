@@ -16,7 +16,7 @@ import java.util.Map;
 public class Matcher {
 	DatabaseMgmt db;
 	ArrayList<Request> reqs;
-	
+
 	public Matcher(ArrayList<Request> reqs) {
 		this.db = new DatabaseMgmt();
 		this.reqs = reqs;
@@ -40,7 +40,9 @@ public class Matcher {
 		for (String t : r.getCleanReq())  {
 			int rs = 0;
 			//On met à jour la somme des tf
+			System.out.println("rs : Ok");
 			rs = db.getOccWordDoc(t, doc);
+			System.out.println("rs : " + rs);
 			tf += rs;
 			if (rs!=0){
 				r.setNbDocFinded(r.getNbDocFinded()+1);
@@ -91,7 +93,7 @@ public class Matcher {
 	public void matchAll(ArrayList<String> docs){
 		Performance p = new Performance(docs);
 		for (Request r : reqs){
-			r.setListDoc(matcherDocReq(r,docs));
+			r.setListDoc(matcherDocReq(r, docs));
 			p.rappel(r);
 			p.precision(r);
 		}
