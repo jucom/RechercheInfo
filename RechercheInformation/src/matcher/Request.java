@@ -90,7 +90,7 @@ public class Request {
 		return listRelevanceDocs;
 	}
 	
-	public static void testRequests() {
+	/*public static void testRequests() {
 		ArrayList<Request> list = createListReq("./qrels/");
 		for (Request r : list) {
 			System.out.println(r.getReq());
@@ -110,7 +110,7 @@ public class Request {
 	
 	public static void main( String args[] ){
 		testRequests();
-	}
+	}*/
 	
 	
 	public Object[] getListDoc() {
@@ -193,6 +193,11 @@ public class Request {
 	public void setNbDocsInQrels(int nbDocsInQrels) {
 		this.nbDocsInQrels = nbDocsInQrels;
 	}
+	
+	public String toString(){
+		return ("name : " + name + "\n" + "request : " + req + "\n" + "rappel : " + rappel + "\n" + "precision : " + precision + "\n");
+	}
+	
 
 
 }
