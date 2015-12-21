@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import constante.Cst;
+
 import Parser.FileManager;
 import Parser.Parser;
 import Parser.ParserWithTags;
@@ -21,8 +23,8 @@ public class FillDatabase {
 
 	public FillDatabase() {
 		this.db = new DatabaseMgmt();
-		this.docsPath = "./CORPUS/CORPUS/";
-		this.stopListPath = "./stopliste.txt";
+		this.docsPath = Cst.docsPath;
+		this.stopListPath = Cst.stopListPath;
 		this.setWordsInDB(new HashMap<String,Integer>());
 	}
 	

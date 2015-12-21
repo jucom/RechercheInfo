@@ -74,7 +74,7 @@ public class ParserWithTags extends Parser {
 		return listOfStringsWithScore;
 	}
 	
-	public static void testParserWithTags() {
+	/*public static void testParserWithTags() {
 		String input = "./CORPUS/CORPUS/D88.html";
 		String stopListPath = "./stopliste.txt";
 		File inputFile = new File(input);
@@ -88,6 +88,6 @@ public class ParserWithTags extends Parser {
 	
 	public static void main( String args[] ){
 		testParserWithTags();
-	}
+	}*/
 
 }

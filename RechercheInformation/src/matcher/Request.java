@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import constante.Cst;
+
 import Parser.Cleaner;
 import Parser.FileManager;
 
@@ -40,15 +42,25 @@ public class Request {
 			}
 			if (list != null) {
 				r.setReq(list.get(0));
-				r.setCleanReq(Cleaner.cleanString(r.getReq()));
-				// /!\ nbDocInQrels set in getPertinenceOfReq
-				r.setListRelevanceDocs(getPertinenceOfReq(path+"qrels/"+name,r));
-				/*
-				for (RequestRelevance r2 : r.getListRelevanceDocs()) {
-					System.out.println(r2.getDoc()+" , "+r2.getRelevance());
+				
+				ArrayList<String> l = Cleaner.cleanString(r.getReq());
+				ArrayList<String> stopList;
+				try {
+					stopList = FileManager.readFileContent(Cst.stopListPath,"iso-8859-1");
+					r.setCleanReq(Parser.Parser.deleteTokensFromStopList(l, stopList));
+					// /!\ nbDocInQrels set in getPertinenceOfReq
+					r.setListRelevanceDocs(getPertinenceOfReq(path+"qrels/"+name,r));
+					/*
+					for (RequestRelevance r2 : r.getListRelevanceDocs()) {
+						System.out.println(r2.getDoc()+" , "+r2.getRelevance());
+					}
+					*/
+					r.setNbDocPertinent(r.getListRelevanceDocs().size());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				*/
-				r.setNbDocPertinent(r.getListRelevanceDocs().size());
+				
 			}
 			reqs.add(r);
 		}

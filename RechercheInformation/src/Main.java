@@ -8,7 +8,7 @@ import matcher.Performance;
 import matcher.Request;
 import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
-
+import constante.Cst;
 
 public class Main {
 	static FillDatabase fillDb = new FillDatabase();
@@ -45,10 +45,10 @@ public class Main {
 		  
 
 		  //On charge le Corpus
-		  docs = FileManager.listerRepertoire("./CORPUS/CORPUS/");
+		  docs = FileManager.listerRepertoire(Cst.docsPath);
 		  
 		  //On charge les requetes
-		  reqs = Request.createListReq("./qrels/");
+		  reqs = Request.createListReq(Cst.reqsPath);
 		  
 		  //On initialise le matcher avec la liste des requêtes et des docs
 		  matcher = new Matcher(reqs, db);
