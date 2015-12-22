@@ -12,6 +12,7 @@ import Parser.FileManager;
 
 import model.Cst;
 import model.Request;
+import model.Term;
 
 /**
  * @author compagnon
@@ -31,46 +32,37 @@ public class Matcher {
 		this.db = db;
 	}
 
-	/*
-	//cree un tableau de string avec les mots pertinents
-	public ArrayList<String> CleanRequest(String req){
-		ArrayList<String> listReq = Cleaner.cleanString(req);
-		//Cleaner.printStringArrayList(listReq);
-		return listReq;
-	}*/
-	
-	
-
-	public float termFrequency(Request r, String doc){
-		int tf = 0;
+	//Pour la v3 il faut garder en memoire le nombre de fois qu'apparaît chaque mot dans le doc
+	public void termFrequency(Request r, String doc){
+		float tf = 0;
 		int nbWords;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
-		for (String t : r.getCleanReq())  {
+		for (Term t : r.getReqTerm())  {
 			int rs = 0;
 			//On met à jour la somme des tf
-			//System.out.println("rs : Ok");
-			rs = db.getOccWordDoc(t, doc);
-			//System.out.println("rs : " + rs);
-			tf += rs;
+			tf = db.getOccWordDoc(t.getName(), doc);
+			nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
+			t.setTf(tf/nbWords);
 			if (rs!=0){
 				r.setNbDocFinded(r.getNbDocFinded()+1);
 			}
 		}
-		nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
 		//System.out.println("tf/nbWords = " + (float)tf/nbWords);
-		return  (float)tf/nbWords;
 	}
+	
+	
+	
+	
 	
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
-	//verifier le resultat !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public ArrayList<String> matcherDocWords(Request req, ArrayList<String> docs){
 		//Pour tous les docs on calcules la sum des tfs et on les classes
 		Map<String,Float> map = new HashMap<>();
 		//System.out.println("declaration Map OK");
 		for (String doc :docs){
-			float res =  termFrequency(req, doc);
-			map.put(doc, res);
+			//float res =  termFrequency(req, doc);
+			//map.put(doc, res);
 		}
 
 		Object[] mapTrier = map.entrySet().toArray();

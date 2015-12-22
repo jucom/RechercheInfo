@@ -10,7 +10,8 @@ import Parser.FileManager;
 public class Request {
 	private String name;
 	private String req;
-	private ArrayList<String> cleanReq;
+	private ArrayList<String> cleanReq;  /// A supprimer
+	private ArrayList<Term> reqTerm; 
 	private int nbDocPertinent;
 	private int nbDocFinded;
 	
@@ -25,6 +26,7 @@ public class Request {
 		this.nbDocFinded = 0;
 		this.nbDocPertinent = 0;
 		this.nbDocsInQrels = 0 ;
+		this.reqTerm = new ArrayList<Term>();
 	}
 	
 	public static ArrayList<Request> createListReq(String path) {
@@ -45,7 +47,12 @@ public class Request {
 				ArrayList<String> stopList;
 				try {
 					stopList = FileManager.readFileContent(Cst.stopListPath,"iso-8859-1");
-					r.setCleanReq(Parser.Parser.deleteTokensFromStopList(l, stopList));
+					ArrayList<String> listTerm = Parser.Parser.deleteTokensFromStopList(l, stopList);
+					r.setCleanReq(listTerm);
+					//on remplie la liste des Term
+					for (String t : listTerm){
+						r.addReqTerm(t);
+					}
 					// /!\ nbDocInQrels set in getPertinenceOfReq
 					r.setListRelevanceDocs(getPertinenceOfReq(path+"qrels/"+name,r));
 					/*
@@ -133,8 +140,6 @@ public class Request {
 		this.listDoc = listDoc;
 	}
 
-
-
 	
 	public String getName() {
 		return name;
@@ -151,7 +156,23 @@ public class Request {
 	public void setCleanReq(ArrayList<String> cleanReq) {
 		this.cleanReq = cleanReq;
 	}
+	
 
+	public ArrayList<Term> getReqTerm() {
+		return reqTerm;
+	}
+
+	public void setReqTerm(ArrayList<Term> reqTerm) {
+		this.reqTerm = reqTerm;
+	}
+
+	//ajoute un elem à la liste 
+	public void addReqTerm(String term) {
+		Term t = new Term(term);
+		this.reqTerm.add(t);
+	}
+
+	
 	public int getNbDocFinded() {
 		return nbDocFinded;
 	}
