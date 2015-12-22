@@ -38,12 +38,11 @@ public class Matcher {
 		int nbWords;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
 		for (Term t : r.getReqTerm())  {
-			int rs = 0;
 			//On met à jour la somme des tf
 			tf = db.getOccWordDoc(t.getName(), doc);
 			nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
 			t.setTf(tf/nbWords);
-			if (rs!=0){
+			if (tf!=0.0){
 				r.setNbDocFinded(r.getNbDocFinded()+1);
 			}
 		}

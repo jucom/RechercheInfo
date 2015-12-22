@@ -3,6 +3,7 @@ package matcher;
 import java.util.ArrayList;
 
 import model.Request;
+import model.RequestRelevance;
 
 public class Performance {
 	ArrayList<String> corpus;
@@ -28,9 +29,12 @@ public class Performance {
 	public int nbDocFindedPertinent(Request req, float indice){
 		//on calcule le nombre de docs pertinent parmis ceux trouvé
 		int nbDocFindedPertinent = 0;	
+		ArrayList<String> docs = new ArrayList<String>();
 		String doc;
-		for (int i=0;(i<indice);i++){
-			doc=req.getListDoc().get(i);
+		docs=req.getListDoc();
+		for (int i=0;(i<indice && i < docs.size());i++){
+			//System.out.println("ok");
+			doc = docs.get(i);
 			if(isDocPertinant(doc,req)){
 				nbDocFindedPertinent++;
 			}

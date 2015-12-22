@@ -1,4 +1,4 @@
-package matcher;
+package model;
 
 public class RequestRelevance {
 	

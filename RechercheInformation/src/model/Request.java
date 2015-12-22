@@ -2,7 +2,6 @@ package model;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import matcher.RequestRelevance;
 
 import Parser.Cleaner;
 import Parser.FileManager;
