@@ -21,26 +21,60 @@ public class Main {
 
 
 	public static void main( String args[] ){
-		mainV1();
-		mainV2();
+		//main(1);
+		main(2);
 	}
 	
-	public static void mainV1(){
+	public void testDB() {
 		db.loadDB();
-		// db.createTable();
-
+		db.createTable();
+		db.setAutoCommit(false);
+		db.insertWordOrDoc("WORDS", "coucou");
+		db.insertWordOrDoc("DOCS", "D2");
+		db.insertWordOrDoc("WORDS", "chat");
+		db.insertWordOrDoc("DOCS", "D1");
+		System.out.println("insertIndexation(1, 1)");
+		db.insertIndexation(1, 1);
+		System.out.println("insertIndexation(1, 2)");
+		db.insertIndexation(1, 2);
+		System.out.println("insertIndexation(2, 2)");
+		db.insertIndexationWithFrequency(2, 2, 2);
+		db.commit();
+		System.out.println("***");
+		System.out.println(db.wordExists("coucou"));
+		System.out.println(db.wordExists("pizza"));
+		System.out.println(db.getID("WORDS", "coucou"));
+	}
+	
+	public static void main(int version){
+		System.out.println("Initialisation des tables sql");
+		/* comment the 2 following lines if you have already imported the corpus*/
+		//FillDatabase fdb = new FillDatabase();
+		//fdb.fillDatabaseWithAllFiles(false);
+		
+		db.loadDB();
 		//On charge le Corpus
 		docs = FileManager.listerRepertoire(Cst.docsPath);
-
 		//On charge les requetes
 		reqs = Request.createListReq(Cst.reqsPath);
-
-		//On initialise le matcher avec la liste des requêtes et des docs
+		//On initialise le matcher avec la liste des requetes et des docs
 		matcher = new Matcher(reqs, db);
 
 		Performance p = new Performance(docs);
 		//On met en route le matcher
-		matcher.matchAllV1(docs);
+		if (version == 1) {
+			matcher.matchAllV1(docs);
+		}
+		else if (version == 2) {
+			matcher.matchAllV2(docs);
+		}
+		else if (version == 3) {
+			matcher.matchAllV3(docs);
+		}
+		else {
+			System.out.println("Error : Main argument must be 1, 2 or 3.");
+			System.exit(0);
+		}
 		for (Request r : reqs){
 			System.out.println(r);
 			System.out.println(p.rappel(r, 5)+p.rappel(r, 15)+p.rappel(r, 25)+p.precision(r, 5)+p.precision(r, 15)+p.precision(r, 25));
@@ -49,54 +83,6 @@ public class Main {
 	}
 
 	
-
-	public static void mainV2(){
-		db.loadDB();
-		// db.createTable();
-
-		//On charge le Corpus
-		docs = FileManager.listerRepertoire(Cst.docsPath);
-
-		//On charge les requetes
-		reqs = Request.createListReq(Cst.reqsPath);
-
-		//On initialise le matcher avec la liste des requêtes et des docs
-		matcher = new Matcher(reqs, db);
-
-		Performance p = new Performance(docs);
-		//On met en route le matcher
-		matcher.matchAllV2(docs);
-		for (Request r : reqs){
-			System.out.println(r);
-			System.out.println(p.rappel(r, 5)+p.rappel(r, 15)+p.rappel(r, 25)+p.precision(r, 5)+p.precision(r, 15)+p.precision(r, 25));
-		}
-		db.closeDB();
-	}
-	
-	
-
-	public static void mainV3(){
-		db.loadDB();
-		// db.createTable();
-
-		//On charge le Corpus
-		docs = FileManager.listerRepertoire(Cst.docsPath);
-
-		//On charge les requetes
-		reqs = Request.createListReq(Cst.reqsPath);
-
-		//On initialise le matcher avec la liste des requêtes et des docs
-		matcher = new Matcher(reqs, db);
-
-		Performance p = new Performance(docs);
-		//On met en route le matcher
-		matcher.matchAllV3(docs);
-		for (Request r : reqs){
-			System.out.println(r);
-			System.out.println(p.rappel(r, 5)+p.rappel(r, 15)+p.rappel(r, 25)+p.precision(r, 5)+p.precision(r, 15)+p.precision(r, 25));
-		}
-		db.closeDB();
-	}
 	/*public static void matcherTest(){
 		  ArrayList<String> docs = new ArrayList<String>();
 		  docs = FileManager.listerRepertoire("/home/compagnon/Documents/5A/RI/RechercheInfos/RechercheInformation/CORPUS/CORPUS");

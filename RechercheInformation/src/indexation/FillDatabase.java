@@ -11,16 +11,15 @@ import model.Cst;
 import Parser.FileManager;
 import Parser.Parser;
 import Parser.ParserWithTags;
-import Parser.StringWithScore;
 
 public class FillDatabase {
-	
+
 	private DatabaseMgmt db;
 	private String stopListPath ;
 	private String docsPath;
 	//map : word in db words / id word
 	private HashMap<String,Integer> wordsInDB;
-	
+
 
 	public FillDatabase() {
 		this.db = new DatabaseMgmt();
@@ -28,28 +27,10 @@ public class FillDatabase {
 		this.stopListPath = Cst.stopListPath;
 		this.setWordsInDB(new HashMap<String,Integer>());
 	}
-	
-	public void fillDatabaseWithFile(String input) {
-		File inputFile = new File(input);
-		// on cree le document dans la table des documents 
-		db.insertWordOrDoc("DOCS", inputFile.getName());
-		int idDoc = db.getID("DOCS",inputFile.getName());
-		// on parse le document input
-		ArrayList<String> result = new ArrayList<String>();
-		result = Parser.parsing(inputFile, stopListPath);
-		// on ajoute tous les mots parsés dans la table
-		for (String word: result) {
-			if (! db.wordExists(word)) {
-				// on ajoute le mot dans la table word
-				db.insertWordOrDoc("WORDS",word);
-			}
-			int idWord = db.getID("WORDS", word);
-			db.insertIndexation(idWord,idDoc);			
-		}		
-	}
-	
+
+
 	// TODO
-	public void fillDatabaseWithFileOptimized(String input, boolean withTags) {
+	public void fillDatabaseWithFile(String input, boolean withTags) {
 		File inputFile = new File(input);
 		// on cree le document dans la table des documents 
 		db.insertWordOrDoc("DOCS", inputFile.getName());
@@ -63,7 +44,7 @@ public class FillDatabase {
 		}
 		else {
 			ArrayList<String> result = Parser.parsing(inputFile, stopListPath);
-			// on ajoute tous les mots parsés dans la table
+			// on ajoute tous les mots parses dans la table
 			for (String word: result) {
 				if (! wordsInDB.containsKey(word)) {
 					// on ajoute le mot dans la table word
@@ -85,29 +66,23 @@ public class FillDatabase {
 			}	
 		}
 	}
-	
-	// if withTags == true, optimization is not considered (true by default)
-	public void fillDatabaseWithAllFiles(boolean optimization, boolean withTags) {
+
+	public void fillDatabaseWithAllFiles(boolean withTags) {
 		ArrayList<String> listRep = new ArrayList<String>();
 		listRep = FileManager.listerRepertoire(this.docsPath);
 		String input = null;
-		db.initDB();		
+		db.loadDB();	
+		db.deleteTables();
+		db.createTable();
+		db.setAutoCommit(false);
 		for (String file : listRep) {
 			input = this.docsPath+file;
-			System.out.println("*********");
 			System.out.println("FILE "+input);
-			if (withTags) {
-				fillDatabaseWithFileOptimized(input,true);
-			}
-			else if (optimization) {
-				fillDatabaseWithFileOptimized(input,false);
-			}
-			else {
-				fillDatabaseWithFile(input);
-			}
-			System.out.println("*********");
+			fillDatabaseWithFile(input,withTags);
 		}
+		db.commit();
 		db.closeDB();
+		System.out.println("fillDatabaseWithAllFiles ended");
 	}
 
 	public DatabaseMgmt getDb() {
@@ -117,7 +92,7 @@ public class FillDatabase {
 	public void setDb(DatabaseMgmt db) {
 		this.db = db;
 	}
-	
+
 	public String getDocsPath() {
 		return docsPath;
 	}
@@ -141,11 +116,11 @@ public class FillDatabase {
 	public void setWordsInDB(HashMap<String,Integer> wordsInDB) {
 		this.wordsInDB = wordsInDB;
 	}
-	
+
 	public static void main( String args[] ){
 		FillDatabase fdb = new FillDatabase();
-		fdb.fillDatabaseWithAllFiles(true,false);
-		
+		fdb.fillDatabaseWithAllFiles(false);
+
 	}
 
 }
