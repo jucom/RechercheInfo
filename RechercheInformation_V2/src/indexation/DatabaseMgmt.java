@@ -51,6 +51,24 @@ public class DatabaseMgmt {
 		System.out.println("Table created successfully");
 	}
 	
+	public void deleteTables(){	
+		Statement stmt = null;
+		try {	
+			stmt = c.createStatement();
+			String sql = "DROP TABLE IF EXISTS WORDS"; 
+			stmt.executeUpdate(sql);
+			sql = "DROP TABLE IF EXISTS DOCS"; 
+			stmt.executeUpdate(sql);
+			sql = "DROP TABLE IF EXISTS INDEXTABLE";
+			stmt.executeUpdate(sql);
+			stmt.close();
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.exit(0);
+		}
+		System.out.println("Tables deleted successfully");
+	}
+	
 	public boolean wordExists(String word) {
 		Statement stmt = null;
 		try {
@@ -95,16 +113,18 @@ public class DatabaseMgmt {
 				sql = "INSERT INTO "+tableName+" (ID,NAME) " + "VALUES (1,"+'"'+value+'"'+");";
 				//System.out.println(sql);
 				stmt.executeUpdate(sql);
+				stmt.close();
+				//c.commit();
 				// sinon, occ++
 			} else {
-				c.setAutoCommit(false);
+				//c.setAutoCommit(false);
 				stmt = c.createStatement();
-				//parsage des docs récupération infos
+				//parsage des docs recuperation infos
 				sql = "INSERT INTO "+tableName+" (NAME) " + "VALUES ("+'"'+value+'"'+");";
 				//System.out.println(sql);
 				stmt.executeUpdate(sql);
 				stmt.close();
-				c.commit();
+				//c.commit();
 			}
 		} catch ( Exception e ) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -116,12 +136,12 @@ public class DatabaseMgmt {
 	public void insertIndexation(int idWord, int idDoc){
 		Statement stmt = null;
 		try {
-			c.setAutoCommit(false);
+			//c.setAutoCommit(false);
 			stmt = c.createStatement();
 			// si le couple n'existe pas encore dans la table : l'ajouter
 			String sql = "";
 			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
-			System.out.println(rs.getInt("count"));
+			//System.out.println(rs.getInt("count"));
 			if (rs.getInt("count") == 0) {
 				sql = "INSERT INTO INDEXTABLE (IDWORD,IDDOC,OCC) " + "VALUES ("+idWord+","+idDoc+","+"1);";
 				//System.out.println(sql);
@@ -138,7 +158,7 @@ public class DatabaseMgmt {
 			}
 			stmt.close();
 			rs.close();
-			c.commit();
+			//c.commit();
 		} catch ( Exception e ) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
@@ -149,7 +169,7 @@ public class DatabaseMgmt {
 	public void insertIndexationWithFrequency(int idWord, int idDoc, int freq){
 		Statement stmt = null;
 		try {
-			c.setAutoCommit(false);
+			//c.setAutoCommit(false);
 			stmt = c.createStatement();
 			String sql = "";
 			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
@@ -161,7 +181,7 @@ public class DatabaseMgmt {
 			} 
 			stmt.close();
 			rs.close();
-			c.commit();
+			//c.commit();
 		} catch ( Exception e ) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
@@ -185,6 +205,22 @@ public class DatabaseMgmt {
 			e.printStackTrace();
 		}
 		return occ;
+	}
+	
+	public void setAutoCommit(boolean bool) {
+		try {
+			c.setAutoCommit(bool);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void commit() {
+		try {
+			c.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void closeDB(){	
