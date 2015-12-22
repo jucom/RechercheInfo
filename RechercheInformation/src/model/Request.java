@@ -1,10 +1,8 @@
-package matcher;
+package model;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import constante.Cst;
+import matcher.RequestRelevance;
 
 import Parser.Cleaner;
 import Parser.FileManager;

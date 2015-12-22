@@ -1,14 +1,13 @@
 import java.util.ArrayList;
-import java.util.Map;
 
 import Parser.FileManager;
 
 import matcher.Matcher;
 import matcher.Performance;
-import matcher.Request;
+import model.Cst;
+import model.Request;
 import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
-import constante.Cst;
 
 public class Main {
 	static FillDatabase fillDb = new FillDatabase();

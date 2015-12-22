@@ -1,4 +1,4 @@
-package constante;
+package model;
 
 public class Cst {
 	// Les path

@@ -1,13 +1,17 @@
 package matcher;
 
 import indexation.DatabaseMgmt;
-import Parser.Cleaner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import Parser.FileManager;
+
+import model.Cst;
+import model.Request;
 
 /**
  * @author compagnon
@@ -34,9 +38,12 @@ public class Matcher {
 		//Cleaner.printStringArrayList(listReq);
 		return listReq;
 	}*/
+	
+	
 
-	public int sumTermFrequency(Request r, String doc){
+	public float termFrequency(Request r, String doc){
 		int tf = 0;
+		int nbWords;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
 		for (String t : r.getCleanReq())  {
 			int rs = 0;
@@ -49,7 +56,9 @@ public class Matcher {
 				r.setNbDocFinded(r.getNbDocFinded()+1);
 			}
 		}
-		return tf;
+		nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
+		//System.out.println("tf/nbWords = " + (float)tf/nbWords);
+		return  (float)tf/nbWords;
 	}
 	
 	//créé un tableau contenant la liste des documents qui contiennent un  des termes
@@ -57,24 +66,24 @@ public class Matcher {
 	//verifier le resultat !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public ArrayList<String> matcherDocWords(Request req, ArrayList<String> docs){
 		//Pour tous les docs on calcules la sum des tfs et on les classes
-		Map<String,Integer> map = new HashMap<>();
+		Map<String,Float> map = new HashMap<>();
 		//System.out.println("declaration Map OK");
 		for (String doc :docs){
-			int res =  sumTermFrequency(req, doc);
+			float res =  termFrequency(req, doc);
 			map.put(doc, res);
 		}
 
 		Object[] mapTrier = map.entrySet().toArray();
 		Arrays.sort(mapTrier, new Comparator() {
 			public int compare(Object o1, Object o2) {
-				return ((Map.Entry<String, Integer>) o2).getValue().compareTo(
-						((Map.Entry<String, Integer>) o1).getValue());
+				return ((Map.Entry<String, Float>) o2).getValue().compareTo(
+						((Map.Entry<String, Float>) o1).getValue());
 			}
 		});
 		ArrayList<String> listDocFinded = new ArrayList<String>();
 		int i = 0;
 		for (Object e : mapTrier) {
-			listDocFinded.add(((Map.Entry<String, Integer>) e).getKey());
+			listDocFinded.add(((Map.Entry<String, Float>) e).getKey());
 			i ++;
 		}
 		

@@ -2,6 +2,8 @@ package matcher;
 
 import java.util.ArrayList;
 
+import model.Request;
+
 public class Performance {
 	ArrayList<String> corpus;
 

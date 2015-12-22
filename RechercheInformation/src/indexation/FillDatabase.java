@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import constante.Cst;
+import model.Cst;
+
 
 import Parser.FileManager;
 import Parser.Parser;
@@ -57,7 +58,7 @@ public class FillDatabase {
 		HashMap<Integer,Integer> map = indexOfWords.getMapIdWordFrequency();
 		// on parse le document input
 		if (withTags) {
-			ArrayList<StringWithScore> list = ParserWithTags.parsingWithTags(inputFile,stopListPath);
+			ParserWithTags.parsingWithTags(inputFile,stopListPath);
 			// TODO
 		}
 		else {

@@ -67,4 +67,11 @@ public class FileManager {
 		return list;
 	}
 	
+	public static int nbWordsInDoc(String filePath){
+		File inputFile = new File(filePath);
+		String s = Parser.initParsing(inputFile);
+		ArrayList<String> list = Cleaner.cleanString(s);
+		return list.size();
+	}
+	
 }
