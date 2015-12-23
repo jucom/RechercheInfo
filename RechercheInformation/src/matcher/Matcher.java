@@ -173,13 +173,13 @@ public class Matcher {
 	// idf = log(N/ni)
 	// N : taille de la collection
 	// ni : nb de documents contenant le terme ti
-	public double calculateIDF(int N, int ni) {
-		return Math.log(N/ni);
+	public float calculateIDF(float N, float ni) {
+		return (float) Math.log(N/ni);
 	}
 	
 	public void setIdf (Request r, String doc) {
-		double idf = 0;
-		int ni;
+		float idf = 0;
+		float ni;
 		for (Term t : r.getReqTerm())  {
 			ni = db.getNbDocContainingWord(t.getName());
 			idf = calculateIDF(FileManager.NbDocInCorpus(), ni);
@@ -198,11 +198,16 @@ public class Matcher {
 		for (Term t : r.getReqTerm())  {
 			//On met a jour la somme des tf
 			tf = db.getOccWordDoc(t.getName(), doc);
+			//System.out.println("1. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
 			nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
-			
+			//System.out.println("2. sumTermFrequencyV3 : nbWords " + nbWords);
 			tf = (float)tf/nbWords;
-			tf = (float) (t.getIdf() * tf);
+			//System.out.println("3. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
+			//System.out.println("3.2 sumTermFrequencyV3 : idf " + (float)t.getIdf() + " term : " + t.getName());
+			tf = tf*(float)t.getIdf();
+			//System.out.println("4. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
 			if (tf!=0.0){
+				//System.out.println("5. sumTermFrequencyV3 : terme :  " + t.getName());
 				r.setNbDocFinded(r.getNbDocFinded()+1);
 			}
 			tfidf += tf;
