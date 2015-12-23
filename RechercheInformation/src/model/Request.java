@@ -9,12 +9,10 @@ import Parser.FileManager;
 public class Request {
 	private String name;
 	private String req;
-	private ArrayList<String> cleanReq;  /// A supprimer
+	private ArrayList<String> cleanReq;
 	private ArrayList<Term> reqTerm; 
 	private int nbDocPertinent;
 	private int nbDocFinded;
-	
-
 	private int nbDocsInQrels;
 	private ArrayList<String> listDoc;
 	private ArrayList<RequestRelevance> listRelevanceDocs;
@@ -165,7 +163,7 @@ public class Request {
 		this.reqTerm = reqTerm;
 	}
 
-	//ajoute un elem à la liste 
+	//ajoute un element a la liste 
 	public void addReqTerm(String term) {
 		Term t = new Term(term);
 		this.reqTerm.add(t);

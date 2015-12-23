@@ -10,6 +10,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import model.Cst;
+
 public class FileManager {
 
 	
@@ -39,7 +41,11 @@ public class FileManager {
 	}
 	
 	public static ArrayList<String> listerRepertoire(){
-		return listerRepertoire("./CORPUS/CORPUS/");
+		return listerRepertoire(Cst.docsPath);
+	}
+	
+	public static int NbDocInCorpus() {
+		return listerRepertoire().size();
 	}
 	
 

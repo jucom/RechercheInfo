@@ -35,12 +35,13 @@ public class Matcher {
 	//###################################################
 	//                       V1
 	//###################################################
+	
 	public int sumTermFrequencyV1(Request r, String doc){
 		int tf = 0;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
 		for (String t : r.getCleanReq())  {
 			int rs = 0;
-			//On met à jour la somme des tf
+			//On met a jour la somme des tf
 			//System.out.println("rs : Ok");
 			rs = db.getOccWordDoc(t, doc);
 			//System.out.println("rs : " + rs);
@@ -52,10 +53,10 @@ public class Matcher {
 		return tf;
 	}
 
-	//créé un tableau contenant la liste des documents qui contiennent un  des termes
+	//cree un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
 	public ArrayList<String> matcherDocWordsV1(Request req, ArrayList<String> docs){
-		//Pour tous les docs on calcules la sum des tfs et on les classes
+		//Pour tous les docs on calcule la sum des tfs et on les classes
 		Map<String,Integer> map = new HashMap<>();
 		//System.out.println("declaration Map OK");
 		for (String doc :docs){
@@ -91,11 +92,8 @@ public class Matcher {
 	}
 	
 	public void matchAllV1(ArrayList<String> docs){
-		Performance p = new Performance(docs);
 		for (Request r : reqs){
 			r.setListDoc(matcherDocReqV1(r, docs));
-			p.rappel(r,10);
-			p.precision(r,10);
 		}
 	}
 
@@ -103,13 +101,14 @@ public class Matcher {
 	//###################################################
 	//                       V2
 	//###################################################
+	
 	public float sumTermFrequencyV2(Request r, String doc){
 		int tf = 0;
 		int nbWords;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
 		for (String t : r.getCleanReq())  {
 			int rs = 0;
-			//On met à jour la somme des tf
+			//On met a jour la somme des tf
 			//System.out.println("rs : Ok");
 			rs = db.getOccWordDoc(t, doc);
 			//System.out.println("rs : " + rs);
@@ -123,7 +122,7 @@ public class Matcher {
 		return  (float)tf/nbWords;
 	}
 
-	//créé un tableau contenant la liste des documents qui contiennent un  des termes
+	//cree un tableau contenant la liste des documents qui contiennent un  des termes
 	//et son nombre d'occurrence
 	public ArrayList<String> matcherDocWordsV2(Request req, ArrayList<String> docs){
 
@@ -161,11 +160,8 @@ public class Matcher {
 	}
 	
 	public void matchAllV2(ArrayList<String> docs){
-		Performance p = new Performance(docs);
 		for (Request r : reqs){
 			r.setListDoc(matcherDocReqV2(r, docs));
-			p.rappel(r,10);
-			p.precision(r,10);
 		}
 	}
 
@@ -173,33 +169,50 @@ public class Matcher {
 	//###################################################
 	//                       V3
 	//###################################################
+	
+	// idf = log(N/ni)
+	// N : taille de la collection
+	// ni : nb de documents contenant le terme ti
+	public double calculateIDF(int N, int ni) {
+		return Math.log(N/ni);
+	}
+	
+	public void setIdf (Request r, String doc) {
+		double idf = 0;
+		int ni;
+		for (Term t : r.getReqTerm())  {
+			ni = db.getNbDocContainingWord(t.getName());
+			idf = calculateIDF(FileManager.NbDocInCorpus(), ni);
+			t.setIdf(idf);
+		}
+	}
 
 
-	//Pour la v3 il faut garder en memoire le nombre de fois qu'apparaît chaque mot dans le doc
+	//Pour la v3 il faut garder en memoire le nombre de fois qu'apparait chaque mot dans le doc
 	public void termFrequencyV3(Request r, String doc){
 		float tf = 0;
+		int idDoc ;
 		int nbWords;
-		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
+		setIdf(r, doc);
+		idDoc = db.getID("WORDS", doc);
 		for (Term t : r.getReqTerm())  {
-			//On met à jour la somme des tf
+			//On met a jour la somme des tf
 			tf = db.getOccWordDoc(t.getName(), doc);
 			nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
-			t.setTf(tf/nbWords);
+			tf = (float)tf/nbWords;
+			// on ajoute tf (doc, term t) dans la map
+			t.addIntoMapDocTF(idDoc, tf);
 			if (tf!=0.0){
 				r.setNbDocFinded(r.getNbDocFinded()+1);
 			}
 		}
-		//System.out.println("tf/nbWords = " + (float)tf/nbWords);
 	}
 
 
-
-
-
-	//créé un tableau contenant la liste des documents qui contiennent un  des termes
-	//et son nombre d'occurrence
+	//cree un tableau contenant la liste des documents qui contiennent un  des termes
+	// de la requete et le tf-idf de chaque document
 	public ArrayList<String> matcherDocWordsV3(Request req, ArrayList<String> docs){
-		//Pour tous les docs on calcules la sum des tfs et on les classes
+		//Pour tous les docs on calcule tfidf et on les classe
 		Map<String,Float> map = new HashMap<>();
 		//System.out.println("declaration Map OK");
 		for (String doc :docs){
@@ -232,7 +245,7 @@ public class Matcher {
 
 
 	/**
-	 * Permet de calculer le tf pour chaque document d'après la requête donnée
+	 * Permet de calculer le tfidf pour chaque document d'apres la requete donnee
 	 * @param req
 	 * @param docs
 	 * @return
@@ -242,14 +255,10 @@ public class Matcher {
 	}
 
 	public void matchAllV3(ArrayList<String> docs){
-		Performance p = new Performance(docs);
 		for (Request r : reqs){
 			r.setListDoc(matcherDocReqV3(r, docs));
-			p.rappel(r,10);
-			p.precision(r,10);
 		}
 	}
-
 
 	public static void printMap(Map<String, Integer> map) {
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {

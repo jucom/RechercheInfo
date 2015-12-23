@@ -23,10 +23,13 @@ public class Main {
 	public static void main( String args[] ){
 		//main(1);
 		main(2);
+		//main(3);
+		//testDB();
 	}
 	
-	public void testDB() {
+	public static void testDB() {
 		db.loadDB();
+		db.deleteTables();
 		db.createTable();
 		db.setAutoCommit(false);
 		db.insertWordOrDoc("WORDS", "coucou");
@@ -44,17 +47,18 @@ public class Main {
 		System.out.println(db.wordExists("coucou"));
 		System.out.println(db.wordExists("pizza"));
 		System.out.println(db.getID("WORDS", "coucou"));
+		System.out.println(db.getNbDocContainingWord("chat"));
 	}
 	
 	public static void main(int version){
 		System.out.println("Initialisation des tables sql");
 		/* comment the 2 following lines if you have already imported the corpus*/
-		//FillDatabase fdb = new FillDatabase();
-		//fdb.fillDatabaseWithAllFiles(false);
+		FillDatabase fdb = new FillDatabase();
+		fdb.fillDatabaseWithAllFiles(false);
 		
 		db.loadDB();
 		//On charge le Corpus
-		docs = FileManager.listerRepertoire(Cst.docsPath);
+		docs = FileManager.listerRepertoire();
 		//On charge les requetes
 		reqs = Request.createListReq(Cst.reqsPath);
 		//On initialise le matcher avec la liste des requetes et des docs
@@ -77,7 +81,7 @@ public class Main {
 		}
 		for (Request r : reqs){
 			System.out.println(r);
-			System.out.println(p.rappel(r, 5)+p.rappel(r, 15)+p.rappel(r, 25)+p.precision(r, 5)+p.precision(r, 15)+p.precision(r, 25));
+			System.out.println(p.rappel(r, 5)+p.rappel(r, 10)+p.rappel(r, 25)+p.precision(r, 5)+p.precision(r, 10)+p.precision(r, 25));
 		}
 		db.closeDB();
 	}

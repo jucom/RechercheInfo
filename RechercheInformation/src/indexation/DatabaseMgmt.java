@@ -195,7 +195,6 @@ public class DatabaseMgmt {
 
 		try {
 			stmt = c.createStatement();
-			//System.out.println(word);
 			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) as count, OCC AS occ FROM INDEXTABLE WHERE IDDOC=(SELECT ID FROM DOCS WHERE NAME="+'"'+doc+'"'+") and IDWORD=(SELECT ID FROM WORDS WHERE NAME="+'"'+word+'"'+");" );
 			if (rs.getInt("count")!= 0){
 				occ = rs.getInt("occ");
@@ -205,6 +204,20 @@ public class DatabaseMgmt {
 			e.printStackTrace();
 		}
 		return occ;
+	}
+	
+	public int getNbDocContainingWord(String word){
+		Statement stmt;
+		int nbDocc = 0;
+		try {
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) as count FROM INDEXTABLE WHERE IDWORD=(SELECT ID FROM WORDS WHERE NAME="+'"'+word+'"'+");" );
+			nbDocc = rs.getInt("count");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return nbDocc;
 	}
 
 	public void setAutoCommit(boolean bool) {

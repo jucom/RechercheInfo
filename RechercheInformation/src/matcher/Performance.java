@@ -43,7 +43,7 @@ public class Performance {
 		return nbDocFindedPertinent;
 	}
 	
-	//renvoit dit si un document est pertinant ou pas par rapport à une requête
+	//renvoit dit si un document est pertinant ou pas par rapport a  une requete
 	public boolean isDocPertinant(String doc, Request r){
 		boolean bool = false;
 		boolean finded = false;
