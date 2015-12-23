@@ -11,6 +11,7 @@ import model.Cst;
 import Parser.FileManager;
 import Parser.Parser;
 import Parser.ParserWithTags;
+import Parser.StringWithScore;
 
 public class FillDatabase {
 
@@ -28,19 +29,49 @@ public class FillDatabase {
 		this.setWordsInDB(new HashMap<String,Integer>());
 	}
 
-
-	// TODO
 	public void fillDatabaseWithFile(String input, boolean withTags) {
 		File inputFile = new File(input);
 		// on cree le document dans la table des documents 
 		db.insertWordOrDoc("DOCS", inputFile.getName());
 		int idDoc = db.getID("DOCS",inputFile.getName());
 		IndexationStructure indexOfWords = new IndexationStructure(idDoc);
-		HashMap<Integer,Integer> map = indexOfWords.getMapIdWordFrequency();
+		HashMap<Integer,Integer> mapFreq = indexOfWords.getMapIdWordFrequency();
 		// on parse le document input
 		if (withTags) {
-			ParserWithTags.parsingWithTags(inputFile,stopListPath);
-			// TODO
+			HashMap<Integer,Integer> mapScore = indexOfWords.getMapIdWordScore();
+			ArrayList<StringWithScore> result = ParserWithTags.parsingWithTags(inputFile,stopListPath);
+			for (StringWithScore sws: result) {
+				int score = sws.getScore();
+				for (String word : sws.getCleanedContentList()) {
+					if (! wordsInDB.containsKey(word)) {
+						// on ajoute le mot dans la table word
+						db.insertWordOrDoc("WORDS",word);
+						int idWord = db.getID("WORDS", word);
+						wordsInDB.put(word, idWord);
+					}
+					int idWord = wordsInDB.get(word);
+					if (! mapFreq.containsKey(idWord)) {
+						mapFreq.put(idWord, 1);
+					}	
+					else {
+						mapFreq.put(idWord, mapFreq.get(idWord) + 1);
+					}
+					if (! mapScore.containsKey(idWord)) {
+						mapScore.put(idWord, score);
+					}	
+					else {
+						mapScore.put(idWord, mapScore.get(idWord) + score);
+					}
+				}
+			}
+			// insertion des mots dans la table indexation
+			for(Entry<Integer, Integer> entry : mapFreq.entrySet()) {
+				Integer key = entry.getKey();
+				Integer value = entry.getValue();
+				Integer score = mapScore.get(key);
+				//System.out.println("key : "+key+" value : "+value+" , score:"+score);
+				db.insertIndexationWithFrequencyAndScore(key, idDoc, value,score);
+			}	
 		}
 		else {
 			ArrayList<String> result = Parser.parsing(inputFile, stopListPath);
@@ -53,13 +84,15 @@ public class FillDatabase {
 					wordsInDB.put(word, idWord);
 				}
 				int idWord = wordsInDB.get(word);
-				if (! map.containsKey(idWord)) {
-					map.put(idWord, 1);
+				if (! mapFreq.containsKey(idWord)) {
+					mapFreq.put(idWord, 1);
 				}	
-				map.put(idWord, map.get(idWord) + 1);
+				else {
+					mapFreq.put(idWord, mapFreq.get(idWord) + 1);
+				}
 			}
 			// insertion des mots dans la table indexation
-			for(Entry<Integer, Integer> entry : map.entrySet()) {
+			for(Entry<Integer, Integer> entry : mapFreq.entrySet()) {
 				Integer key = entry.getKey();
 				Integer value = entry.getValue();
 				db.insertIndexationWithFrequency(key, idDoc, value);
@@ -119,7 +152,7 @@ public class FillDatabase {
 
 	public static void main( String args[] ){
 		FillDatabase fdb = new FillDatabase();
-		fdb.fillDatabaseWithAllFiles(false);
+		fdb.fillDatabaseWithAllFiles(true);
 
 	}
 

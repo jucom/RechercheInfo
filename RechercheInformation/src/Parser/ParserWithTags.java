@@ -34,7 +34,7 @@ public class ParserWithTags extends Parser {
 	        	else if (element.tagName() == "h2") {
 	        		textAndScore.setScore(5);
 	        	}
-	        	// le score est par défaut de 1
+	        	// le score est par defaut de 1
 	        	
 	            final String text = textNode.text();
 	            if (!(text.equals(" "))) {
@@ -74,8 +74,9 @@ public class ParserWithTags extends Parser {
 		return listOfStringsWithScore;
 	}
 	
+	
 	/*public static void testParserWithTags() {
-		String input = "./CORPUS/CORPUS/D88.html";
+		String input = "./CORPUS/CORPUS/D15.html";
 		String stopListPath = "./stopliste.txt";
 		File inputFile = new File(input);
 		ArrayList<StringWithScore> result = new ArrayList<StringWithScore>();
@@ -83,7 +84,7 @@ public class ParserWithTags extends Parser {
 		for (StringWithScore sws : result) {
 			Cleaner.printStringArrayList(sws.getCleanedContentList());
 			System.out.println("Score:"+sws.getScore());
-		}			
+		}
 	}
 	
 	public static void main( String args[] ){

@@ -6,6 +6,8 @@ public class IndexationStructure {
 	
 	// map with key = idword, value = nb occ of idword 
 	private HashMap<Integer,Integer> mapIdWordFrequency ;
+	// map with key = idword, value = score
+	private HashMap<Integer,Integer> mapIdWordScore ;
 	private int idDoc ;
 	
 	public HashMap<Integer, Integer> getMapIdWordFrequency() {
@@ -27,6 +29,15 @@ public class IndexationStructure {
 	public IndexationStructure(int idDoc) {
 		this.idDoc = idDoc;
 		this.mapIdWordFrequency = new HashMap<Integer,Integer>();
+		this.mapIdWordScore = new HashMap<Integer,Integer>();
+	}
+
+	public HashMap<Integer,Integer> getMapIdWordScore() {
+		return mapIdWordScore;
+	}
+
+	public void setMapIdWordScore(HashMap<Integer,Integer> mapIdWordScore) {
+		this.mapIdWordScore = mapIdWordScore;
 	}
 	
 	

@@ -9,7 +9,7 @@ public class StringWithScore {
 	private int score;
 	// contenu du string
 	private String content;
-	// contenu nettoyé et tokenisé
+	// contenu nettoye et tokenise
 	private ArrayList<String> cleanedContentList;
 	
 	public StringWithScore() {

@@ -100,6 +100,19 @@ public class DatabaseMgmt {
 		}
 		return -1;
 	}
+	
+	public int getScore(int idDoc, int idWord) {
+		Statement stmt = null;
+		try {
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery( "SELECT SCORE AS score FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
+			return rs.getInt("score");
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.exit(0);
+		}
+		return -1;
+	}
 
 	public void insertWordOrDoc(String tableName, String value){
 		Statement stmt = null;
@@ -179,6 +192,36 @@ public class DatabaseMgmt {
 				//System.out.println(sql);
 				stmt.executeUpdate(sql);
 			} 
+			else {
+				System.out.println("Error wrong usage of insertIndexationWithFrequency : idDoc/idWord couple already exists in indextable.");
+				System.exit(0);
+			}
+			stmt.close();
+			rs.close();
+			//c.commit();
+		} catch ( Exception e ) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		//System.out.println("Records created successfully");
+	}
+	
+	public void insertIndexationWithFrequencyAndScore(int idWord, int idDoc, int freq, int score){
+		Statement stmt = null;
+		try {
+			//c.setAutoCommit(false);
+			stmt = c.createStatement();
+			String sql = "";
+			ResultSet rs = stmt.executeQuery( "SELECT COUNT(*) AS count FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
+			if (rs.getInt("count") == 0) {
+				sql = "INSERT INTO INDEXTABLE (IDWORD,IDDOC,OCC,SCORE) " + "VALUES ("+idWord+","+idDoc+","+freq+","+score+");";
+				//System.out.println(sql);
+				stmt.executeUpdate(sql);
+			} 
+			else {
+				System.out.println("Error wrong usage of insertIndexationWithFrequencyAndScore : idDoc/idWord couple already exists in indextable.");
+				System.exit(0);
+			}
 			stmt.close();
 			rs.close();
 			//c.commit();
