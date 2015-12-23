@@ -189,23 +189,25 @@ public class Matcher {
 
 
 	//Pour la v3 il faut garder en memoire le nombre de fois qu'apparait chaque mot dans le doc
-	public void termFrequencyV3(Request r, String doc){
+	public float sumTermFrequencyV3(Request r, String doc){
 		float tf = 0;
+		float tfidf = 0;
 		int idDoc ;
 		int nbWords;
 		setIdf(r, doc);
-		idDoc = db.getID("WORDS", doc);
 		for (Term t : r.getReqTerm())  {
 			//On met a jour la somme des tf
 			tf = db.getOccWordDoc(t.getName(), doc);
 			nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
+			
 			tf = (float)tf/nbWords;
-			// on ajoute tf (doc, term t) dans la map
-			t.addIntoMapDocTF(idDoc, tf);
+			tf = (float) (t.getIdf() * tf);
 			if (tf!=0.0){
 				r.setNbDocFinded(r.getNbDocFinded()+1);
 			}
+			tfidf += tf;
 		}
+		return tfidf;
 	}
 
 
@@ -216,8 +218,8 @@ public class Matcher {
 		Map<String,Float> map = new HashMap<>();
 		//System.out.println("declaration Map OK");
 		for (String doc :docs){
-			//float res =  termFrequency(req, doc);
-			//map.put(doc, res);
+			float res =  sumTermFrequencyV3(req, doc);
+			map.put(doc, res);
 		}
 
 		Object[] mapTrier = map.entrySet().toArray();
