@@ -81,6 +81,14 @@ public class Matcher {
 				float res =  sumTermFrequencyV3(req, doc);
 				mapF.put(doc, res);
 			}
+			else if (version == 4) {
+				//float res =  sumTermFrequencyV4(req, doc);
+				//mapF.put(doc, res);
+			}
+			else if (version == 5) {
+				float res =  sumTermFrequencyV5(req, doc);
+				mapF.put(doc, res);
+			}
 		}
 
 		ArrayList<String> listDocFinded = new ArrayList<String>();
@@ -212,5 +220,24 @@ public class Matcher {
 	//###################################################
 	// V5 : prise en compte des scores (title, h1 et h2)
 	//###################################################
+	
+	public float sumTermFrequencyV5(Request r, String doc){
+		int tf = 0;
+		int scoreDoc;
+		//Pour chaque terme on cherche le score dans le Doc
+		for (String t : r.getCleanReq())  {
+			int rs = 0;
+			//System.out.println("term : "+t);
+			rs = db.getScore(doc, t);
+			//System.out.println("score : "+rs);
+			tf += rs;
+			if (rs!=0){
+				r.setNbDocFinded(r.getNbDocFinded()+1);
+			}
+		}
+		//nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
+		scoreDoc = db.getScoreOfDdoc(doc);
+		return  (float)tf/scoreDoc;
+	}
 
 }

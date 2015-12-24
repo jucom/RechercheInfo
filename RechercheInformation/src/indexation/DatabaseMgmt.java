@@ -93,7 +93,12 @@ public class DatabaseMgmt {
 		try {
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery( "SELECT ID AS id FROM "+ tableName +" WHERE NAME="+'"'+value+'"'+";" );
-			return rs.getInt("id");
+			if (rs.next() == false) {
+				return -1;
+			}
+			else {
+				return rs.getInt("id");
+			}
 		} catch ( Exception e ) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			System.exit(0);
@@ -101,12 +106,17 @@ public class DatabaseMgmt {
 		return -1;
 	}
 	
-	public int getScore(int idDoc, int idWord) {
+	public int getScore(String doc, String word) {
 		Statement stmt = null;
 		try {
 			stmt = c.createStatement();
-			ResultSet rs = stmt.executeQuery( "SELECT SCORE AS score FROM INDEXTABLE WHERE IDDOC="+idDoc+" and IDWORD="+idWord+";" );
-			return rs.getInt("score");
+			ResultSet rs = stmt.executeQuery( "SELECT SCORE AS score FROM INDEXTABLE WHERE IDDOC=(SELECT ID FROM DOCS WHERE NAME="+'"'+doc+'"'+") and IDWORD=(SELECT ID FROM WORDS WHERE NAME="+'"'+word+'"'+");" );
+			if (rs.next() == false) {
+				return 0;
+			}
+			else {
+				return rs.getInt("score");
+			}
 		} catch ( Exception e ) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			System.exit(0);
@@ -261,6 +271,20 @@ public class DatabaseMgmt {
 			e.printStackTrace();
 		}
 		return nbDocc;
+	}
+	
+	public int getScoreOfDdoc(String doc){
+		Statement stmt;
+		int score = 0;
+		try {
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery( "SELECT SUM(SCORE) as somme FROM INDEXTABLE WHERE IDDOC=(SELECT ID FROM DOCS WHERE NAME="+'"'+doc+'"'+");" );
+			score = rs.getInt("somme");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return score;
 	}
 
 	public void setAutoCommit(boolean bool) {

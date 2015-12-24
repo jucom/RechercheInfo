@@ -21,9 +21,10 @@ public class Main {
 
 
 	public static void main( String args[] ){
-		main(1);
+		//main(1);
 		//main(2);
 		//main(3);
+		main(5);
 		//testDB();
 	}
 
@@ -42,12 +43,17 @@ public class Main {
 		db.insertIndexation(1, 2);
 		System.out.println("insertIndexation(2, 2)");
 		db.insertIndexationWithFrequency(2, 2, 2);
+		db.insertIndexationWithFrequencyAndScore(2, 1, 2,100);
 		db.commit();
 		System.out.println("***");
 		System.out.println(db.wordExists("coucou"));
 		System.out.println(db.wordExists("pizza"));
 		System.out.println(db.getID("WORDS", "coucou"));
+		System.out.println(db.getID("WORDS", "pizza"));
 		System.out.println(db.getNbDocContainingWord("chat"));
+		System.out.println(db.getOccWordDoc("chat", "D2"));
+		System.out.println(db.getScore("D2", "chat"));
+		System.out.println(db.getScore("D2", "coucou"));
 	}
 
 	public static void main(int version){
@@ -71,11 +77,11 @@ public class Main {
 
 		Performance p = new Performance(docs);
 		//On met en route le matcher
-		if (version > 0 && version < 4) {
+		if (version > 0 && version < 6) {
 			matcher.matchAll(docs, version);
 		}
 		else {
-			System.out.println("Error : Main argument must be 1, 2 or 3.");
+			System.out.println("Error : Main argument must belong to [1,5].");
 			System.exit(0);
 		}
 		for (Request r : reqs){
