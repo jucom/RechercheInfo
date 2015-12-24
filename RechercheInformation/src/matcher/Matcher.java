@@ -32,10 +32,82 @@ public class Matcher {
 		this.db = db;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public ArrayList<String> createListDocFindedV1(Map<String,Integer> map) {
+		Object[] mapTrier = map.entrySet().toArray();
+		Arrays.sort(mapTrier, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return ((Map.Entry<String, Integer>) o2).getValue().compareTo(
+						((Map.Entry<String, Integer>) o1).getValue());
+			}
+		});
+		ArrayList<String> listDocFinded = new ArrayList<String>();
+		for (Object e : mapTrier) {
+			listDocFinded.add(((Map.Entry<String, Integer>) e).getKey());
+		}
+		return listDocFinded;
+	}
+
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public ArrayList<String> createListDocFinded(Map<String,Float> map) {
+		Object[] mapTrier = map.entrySet().toArray();
+		Arrays.sort(mapTrier, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return ((Map.Entry<String, Float>) o2).getValue().compareTo(
+						((Map.Entry<String, Float>) o1).getValue());
+			}
+		});
+		ArrayList<String> listDocFinded = new ArrayList<String>();
+		for (Object e : mapTrier) {
+			listDocFinded.add(((Map.Entry<String, Float>) e).getKey());
+		}
+		return listDocFinded;
+	}
+
+	public ArrayList<String> matcherDocWords(Request req, ArrayList<String> docs, int version){
+		Map<String,Integer> mapI = new HashMap<>();;
+		Map<String,Float> mapF = new HashMap<>();;
+		for (String doc :docs){
+			if (version == 1) {
+				int res =  sumTermFrequencyV1(req, doc);
+				mapI.put(doc, res);
+			}
+			else if (version == 2) {
+				float res =  sumTermFrequencyV2(req, doc);
+				mapF.put(doc, res);
+			}
+			else if (version == 3) {
+				float res =  sumTermFrequencyV3(req, doc);
+				mapF.put(doc, res);
+			}
+		}
+
+		ArrayList<String> listDocFinded = new ArrayList<String>();
+		if (version == 1) {
+			listDocFinded = createListDocFindedV1(mapI);
+		}
+		else {
+			listDocFinded = createListDocFinded(mapF);
+		}
+		return listDocFinded;
+	}
+
+	public ArrayList<String> matcherDocReq(Request req, ArrayList<String> docs, int version){	
+		return matcherDocWords(req,docs, version);
+	}
+
+	public void matchAll(ArrayList<String> docs, int version){
+		for (Request r : reqs){
+			r.setListDoc(matcherDocReq(r, docs, version));
+		}
+	}
+
+
 	//###################################################
 	//                       V1
 	//###################################################
-	
+
 	public int sumTermFrequencyV1(Request r, String doc){
 		int tf = 0;
 		//Pour chaque terme on cherche le nombre d'occurrence dans le Doc
@@ -53,55 +125,10 @@ public class Matcher {
 		return tf;
 	}
 
-	//cree un tableau contenant la liste des documents qui contiennent un  des termes
-	//et son nombre d'occurrence
-	public ArrayList<String> matcherDocWordsV1(Request req, ArrayList<String> docs){
-		//Pour tous les docs on calcule la sum des tfs et on les classes
-		Map<String,Integer> map = new HashMap<>();
-		//System.out.println("declaration Map OK");
-		for (String doc :docs){
-			int res =  sumTermFrequencyV1(req, doc);
-			map.put(doc, res);
-		}
-
-		Object[] mapTrier = map.entrySet().toArray();
-		Arrays.sort(mapTrier, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				return ((Map.Entry<String, Integer>) o2).getValue().compareTo(
-						((Map.Entry<String, Integer>) o1).getValue());
-			}
-		});
-		ArrayList<String> listDocFinded = new ArrayList<String>();
-		int i = 0;
-		for (Object e : mapTrier) {
-			listDocFinded.add(((Map.Entry<String, Integer>) e).getKey());
-			i ++;
-		}
-
-		/*for (String s : listDocFinded) {
-					System.out.println(s);
-				}
-				System.out.println("");*/
-
-		return listDocFinded;
-
-	}
-
-	public ArrayList<String> matcherDocReqV1(Request req, ArrayList<String> docs){
-		return matcherDocWordsV1(req,docs);
-	}
-	
-	public void matchAllV1(ArrayList<String> docs){
-		for (Request r : reqs){
-			r.setListDoc(matcherDocReqV1(r, docs));
-		}
-	}
-
-
 	//###################################################
 	//                       V2
 	//###################################################
-	
+
 	public float sumTermFrequencyV2(Request r, String doc){
 		int tf = 0;
 		int nbWords;
@@ -122,61 +149,17 @@ public class Matcher {
 		return  (float)tf/nbWords;
 	}
 
-	//cree un tableau contenant la liste des documents qui contiennent un  des termes
-	//et son nombre d'occurrence
-	public ArrayList<String> matcherDocWordsV2(Request req, ArrayList<String> docs){
-
-		Map<String,Float> map = new HashMap<>();
-		//System.out.println("declaration Map OK");
-		for (String doc :docs){
-			float res =  sumTermFrequencyV2(req, doc);
-			map.put(doc, res);
-		}
-
-		Object[] mapTrier = map.entrySet().toArray();
-		Arrays.sort(mapTrier, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				return ((Map.Entry<String, Float>) o2).getValue().compareTo(
-						((Map.Entry<String, Float>) o1).getValue());
-			}
-		});
-		ArrayList<String> listDocFinded = new ArrayList<String>();
-		int i = 0;
-		for (Object e : mapTrier) {
-			listDocFinded.add(((Map.Entry<String, Float>) e).getKey());
-			i ++;
-		}
-		
-		/*for (String s : listDocFinded) {
-			System.out.println(s);
-		}
-		System.out.println("");*/
-		
-		return listDocFinded;
-	}
-
-	public ArrayList<String> matcherDocReqV2(Request req, ArrayList<String> docs){
-		return matcherDocWordsV2(req,docs);
-	}
-	
-	public void matchAllV2(ArrayList<String> docs){
-		for (Request r : reqs){
-			r.setListDoc(matcherDocReqV2(r, docs));
-		}
-	}
-
-
 	//###################################################
 	//                       V3
 	//###################################################
-	
+
 	// idf = log(N/ni)
 	// N : taille de la collection
 	// ni : nb de documents contenant le terme ti
 	public float calculateIDF(float N, float ni) {
 		return (float) Math.log(N/ni);
 	}
-	
+
 	public void setIdf (Request r, String doc) {
 		float idf = 0;
 		float ni;
@@ -214,58 +197,6 @@ public class Matcher {
 		return tfidf;
 	}
 
-
-	//cree un tableau contenant la liste des documents qui contiennent un  des termes
-	// de la requete et le tf-idf de chaque document
-	public ArrayList<String> matcherDocWordsV3(Request req, ArrayList<String> docs){
-		//Pour tous les docs on calcule tfidf et on les classe
-		Map<String,Float> map = new HashMap<>();
-		//System.out.println("declaration Map OK");
-		for (String doc :docs){
-			float res =  sumTermFrequencyV3(req, doc);
-			map.put(doc, res);
-		}
-
-		Object[] mapTrier = map.entrySet().toArray();
-		Arrays.sort(mapTrier, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				return ((Map.Entry<String, Float>) o2).getValue().compareTo(
-						((Map.Entry<String, Float>) o1).getValue());
-			}
-		});
-		ArrayList<String> listDocFinded = new ArrayList<String>();
-		int i = 0;
-		for (Object e : mapTrier) {
-			listDocFinded.add(((Map.Entry<String, Float>) e).getKey());
-			i ++;
-		}
-
-		/*for (String s : listDocFinded) {
-			System.out.println(s);
-		}
-		System.out.println("");*/
-
-		return listDocFinded;
-	}
-
-
-
-	/**
-	 * Permet de calculer le tfidf pour chaque document d'apres la requete donnee
-	 * @param req
-	 * @param docs
-	 * @return
-	 */
-	public ArrayList<String> matcherDocReqV3(Request req, ArrayList<String> docs){
-		return matcherDocWordsV3(req,docs);
-	}
-
-	public void matchAllV3(ArrayList<String> docs){
-		for (Request r : reqs){
-			r.setListDoc(matcherDocReqV3(r, docs));
-		}
-	}
-
 	public static void printMap(Map<String, Integer> map) {
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {
 			System.out.println("Doc : " + entry.getKey() 
@@ -273,5 +204,13 @@ public class Matcher {
 		}
 	}
 
+	//###################################################
+	//                       V4
+	//###################################################
+
+
+	//###################################################
+	// V5 : prise en compte des scores (title, h1 et h2)
+	//###################################################
 
 }

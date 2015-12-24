@@ -21,12 +21,12 @@ public class Main {
 
 
 	public static void main( String args[] ){
-		//main(1);
+		main(1);
 		//main(2);
-		main(3);
+		//main(3);
 		//testDB();
 	}
-	
+
 	public static void testDB() {
 		db.loadDB();
 		db.deleteTables();
@@ -49,12 +49,18 @@ public class Main {
 		System.out.println(db.getID("WORDS", "coucou"));
 		System.out.println(db.getNbDocContainingWord("chat"));
 	}
-	
+
 	public static void main(int version){
 		System.out.println("Initialisation des tables sql");
-		/* comment the following line if you have already imported the corpus*/
-		//fillDb.fillDatabaseWithAllFiles(false);
-		
+		/* comment the following lines if you have already imported the corpus*/
+		/*
+		if (version == 5) {
+			fillDb.fillDatabaseWithAllFiles(true);
+		}
+		else {
+			fillDb.fillDatabaseWithAllFiles(false);
+		}
+		*/
 		db.loadDB();
 		//On charge le Corpus
 		docs = FileManager.listerRepertoire();
@@ -65,14 +71,8 @@ public class Main {
 
 		Performance p = new Performance(docs);
 		//On met en route le matcher
-		if (version == 1) {
-			matcher.matchAllV1(docs);
-		}
-		else if (version == 2) {
-			matcher.matchAllV2(docs);
-		}
-		else if (version == 3) {
-			matcher.matchAllV3(docs);
+		if (version > 0 && version < 4) {
+			matcher.matchAll(docs, version);
 		}
 		else {
 			System.out.println("Error : Main argument must be 1, 2 or 3.");
@@ -85,7 +85,7 @@ public class Main {
 		db.closeDB();
 	}
 
-	
+
 	/*public static void matcherTest(){
 		  ArrayList<String> docs = new ArrayList<String>();
 		  docs = FileManager.listerRepertoire("/home/compagnon/Documents/5A/RI/RechercheInfos/RechercheInformation/CORPUS/CORPUS");
@@ -99,5 +99,5 @@ public class Main {
 			}
 	  }*/
 
-	
+
 }
