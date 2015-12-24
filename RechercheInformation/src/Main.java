@@ -52,10 +52,8 @@ public class Main {
 	
 	public static void main(int version){
 		System.out.println("Initialisation des tables sql");
-		/* comment the 2 following lines if you have already imported the corpus*/
-		
-		//FillDatabase fdb = new FillDatabase();
-		//fdb.fillDatabaseWithAllFiles(false);
+		/* comment the following line if you have already imported the corpus*/
+		//fillDb.fillDatabaseWithAllFiles(false);
 		
 		db.loadDB();
 		//On charge le Corpus

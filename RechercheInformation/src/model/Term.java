@@ -8,7 +8,7 @@ public class Term {
 	// idf = log(N/ni)
 	// N : taille de la collection
 	// ni : nb de documents contenant le terme ti
-	private double idf;
+	private float idf;
 	private HashMap<Integer,Float> mapIdDocTF;
 	
 	
@@ -34,12 +34,12 @@ public class Term {
 
 
 
-	public double getIdf() {
+	public float getIdf() {
 		return idf;
 	}
 
 
-	public void setIdf(double idf) {
+	public void setIdf(float idf) {
 		this.idf = idf;
 	}
 

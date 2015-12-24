@@ -192,7 +192,6 @@ public class Matcher {
 	public float sumTermFrequencyV3(Request r, String doc){
 		float tf = 0;
 		float tfidf = 0;
-		int idDoc ;
 		int nbWords;
 		setIdf(r, doc);
 		for (Term t : r.getReqTerm())  {
@@ -201,10 +200,10 @@ public class Matcher {
 			//System.out.println("1. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
 			nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
 			//System.out.println("2. sumTermFrequencyV3 : nbWords " + nbWords);
-			tf = (float)tf/nbWords;
+			tf = tf/nbWords;
 			//System.out.println("3. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
 			//System.out.println("3.2 sumTermFrequencyV3 : idf " + (float)t.getIdf() + " term : " + t.getName());
-			tf = tf*(float)t.getIdf();
+			tf = tf*t.getIdf();
 			//System.out.println("4. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
 			if (tf!=0.0){
 				//System.out.println("5. sumTermFrequencyV3 : terme :  " + t.getName());
