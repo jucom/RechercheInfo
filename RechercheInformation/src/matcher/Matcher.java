@@ -83,8 +83,10 @@ public class Matcher {
 				mapF.put(doc, res);
 			}
 			else if (version == 4) {
-				//float res =  sumTermFrequencyV4(req, doc);
+				float res =  sumTermFrequencyV4(req, doc);
 				//mapF.put(doc, res);
+				//getCosineSimilarity(req);
+
 			}
 			else if (version == 5) {
 				float res =  sumTermFrequencyV5(req, doc);
@@ -96,8 +98,10 @@ public class Matcher {
 		if (version == 1) {
 			listDocFinded = createListDocFindedV1(mapI);
 		}
-		else {
+		else if (version != 4) {
 			listDocFinded = createListDocFinded(mapF);
+		} else {
+			listDocFinded = null;
 		}
 		return listDocFinded;
 	}
@@ -107,9 +111,19 @@ public class Matcher {
 	}
 
 	public void matchAll(ArrayList<String> docs, int version){
+
 		for (Request r : reqs){
 			r.setListDoc(matcherDocReq(r, docs, version));
 		}
+		if (version == 4){
+			getCosineSimilarity(); //calculates cosine similarity  
+		}
+
+
+
+
+
+
 	}
 
 
@@ -218,10 +232,11 @@ public class Matcher {
 	//###################################################
 
 	//This variable will hold all terms of each document in an array.
-	private List tfidfDocsVector = new ArrayList<>();
-	private List tfidfReqVector = new ArrayList<>();
-	private List docList = new ArrayList<>();
-	
+	private ArrayList<float[]> tfidfDocsVector = new ArrayList<float[]>();
+	private ArrayList<float[]> tfidfReqVector = new ArrayList<float[]>();
+	private ArrayList<String> docList = new ArrayList<String>();
+	private ArrayList<Request> reqList = new ArrayList<Request>();
+
 
 	/**
 	 * Method to calculate cosine similarity between two documents.
@@ -229,28 +244,39 @@ public class Matcher {
 	 * @param docVector2 : document vector 2 (b)
 	 * @return 
 	 */
-	public double cosineSimilarity(double[] docVector1, double[] docVector2) {
-		double dotProduct = 0.0;
-		double magnitude1 = 0.0;
-		double magnitude2 = 0.0;
-		double cosineSimilarity = 0.0;
+	public float cosineSimilarity(float[] docVector1, float[] docVector2) {
+		float dotProduct = (float) 0.0;
+		float magnitude1 = (float) 0.0;
+		float magnitude2 = (float) 0.0;
+		float cosineSimilarity = (float) 0.0;
 
-		if (docVector1 != null && docVector1 != null){
+		if (docVector1 != null && docVector2 != null){
 
 			for (int i = 0; i < docVector1.length; i++) //docVector1 and docVector2 must be of same length
 			{
+				//System.out.println( "taille vector 1 = " +  docVector1.length);
+				//System.out.println( "taille vector 2 = " +  docVector2.length);
+
+
 				dotProduct += docVector1[i] * docVector2[i];  //a.b
+				//System.out.println(" dotProduct = " + docVector2[i] );
+
 				magnitude1 += Math.pow(docVector1[i], 2);  //(a^2)
 				magnitude2 += Math.pow(docVector2[i], 2); //(b^2)
+
+				//System.out.println("magnitude2 = " + magnitude2 +  " dotProduct = " + dotProduct );
+
 			}
+			magnitude1 =(float)  Math.sqrt(magnitude1);//sqrt(a^2)
+			magnitude2 = (float) Math.sqrt(magnitude2);//sqrt(b^2)
 
-			magnitude1 = Math.sqrt(magnitude1);//sqrt(a^2)
-			magnitude2 = Math.sqrt(magnitude2);//sqrt(b^2)
-
-			if (magnitude1 != 0.0 | magnitude2 != 0.0) {
-				cosineSimilarity = dotProduct / (magnitude1 * magnitude2);
+			//System.out.println("magnitude1 = " + magnitude1 +  "magnitude2 = " + magnitude2 );
+			if (magnitude1 != 0 && magnitude2 != 0 && dotProduct != 0) {
+				//System.out.println("passe par là  + magnitude1 = " + magnitude1 +  "magnitude2 = " + magnitude2 +  "dotProduct = " + dotProduct );
+				cosineSimilarity = (float) (dotProduct / (magnitude1 * magnitude2));
+				//System.out.println("passe par là  + cos = " + cosineSimilarity );
 			} else {
-				return 0.0;
+				return (float)0;
 			}
 		}
 		return cosineSimilarity;
@@ -261,19 +287,35 @@ public class Matcher {
 
 	//Pour la v3 il faut garder en memoire le nombre de fois qu'apparait chaque mot dans le doc
 	public float sumTermFrequencyV4(Request r, String doc){
-		float tf = 0;
+		float tf = (float) 0.0;
 		int count = 0;
-		float tfidf = 0;
+		float tfidf = (float) 0.0;
 		int nbWords;
 		setIdf(r, doc);
-		double[] tfidfvectors = new double[r.getReqTerm().size()];
+		float[] tfidfvectors = new float[r.getReqTerm().size()];
+
+		float[] termVector = new float[r.getReqTerm().size()];
+		//System.out.println("Size : " + r.getReqTerm().size());
+		for (int i=0; i<r.getReqTerm().size();i++){
+		}
+
 		for (Term t : r.getReqTerm())  {
 			//On met a jour la somme des tf
-			tf = db.getOccWordDoc(t.getName(), doc);
+			//System.out.println("t.getName() = "+ t.getName());
+			tf =  db.getOccWordDoc(t.getName(), doc);
+			//System.out.println("1. sumTermFrequencyV4 : tf " + tf + " term : " + t.getName() + " doc : " + doc);
 			nbWords = FileManager.nbWordsInDoc(Cst.docsPath+"/"+doc);
-			tf = tf/nbWords;
-			tf = tf*t.getIdf();
+			//System.out.println("nbWords = "+ nbWords);
+			if (nbWords != 0 || tf !=0){
+				tf = tf/(float) nbWords;
+				//System.out.println("tf = "+ tf);
+				tf = tf*t.getIdf();
+				//System.out.println("tf = "+ tf);
+			}			
 			tfidfvectors[count] = tf;
+			termVector[count] = (float) (1.0 / r.getReqTerm().size());
+
+			//System.out.println("tfidfvectors[count] = "+ tfidfvectors[count]);
 			count++;
 			if (tf!=0.0){
 				r.setNbDocFinded(r.getNbDocFinded()+1);
@@ -281,89 +323,49 @@ public class Matcher {
 			tfidf += tf;
 		}
 		tfidfDocsVector.add(tfidfvectors);  //storing document vectors;  
+		tfidfReqVector.add(termVector);
 		docList.add(doc);
+		reqList.add(r);
+		//System.out.println(r.getName() + " Size tfidfvect = " + tfidfvectors.length);
+
 		return tfidf;
 	}
 
 	/**
 	 * Method to calculate cosine similarity between all the documents.
 	 */
-	public void getCosineSimilarity(Request r) {
-;
-			double[] termVector = new double[r.getReqTerm().size()];
-			System.out.println(r.getReqTerm().size());
-			for (int i=0; i<r.getReqTerm().size();i++){
-				termVector[i] = (double) (1.0 / r.getReqTerm().size());
-			}
-			tfidfReqVector.add(termVector);
-			
-			for (int j = 0; j < tfidfDocsVector.size(); j++) {
-				double cos = cosineSimilarity((double[])tfidfReqVector.get(0), (double[]) tfidfDocsVector.get(j));
-				if (cos != 0) {
-					System.out.println("between " + r.getName() + " and " + docList.get(j) + "  =  "
+	public void getCosineSimilarity() {
+
+		Map<String,Float> mapF = new HashMap<>();
+		Request curReq = reqList.get(0);
+		for (int j = 0; j < tfidfDocsVector.size(); j++) {
+			float cos = cosineSimilarity((float[])tfidfReqVector.get(j), (float[])tfidfDocsVector.get(j));
+			if (cos != 0) {
+				//System.out.println(r.getCleanReq());
+				System.out.println("between " + reqList.get(j).getName() + " and " + docList.get(j) + "  =  "
 						+ cos);
+				if (curReq == reqList.get(j)) {
+					mapF.put(docList.get(j), cos);
+					ArrayList<String> listDocFinded = new ArrayList<String>();
+					listDocFinded = createListDocFinded(mapF);
+					curReq.setListDoc(listDocFinded);
+				} else {
+					curReq = reqList.get(j);
+					mapF = new HashMap<>();
 				}
 			}
+
+		}
+
 	}
 
 
-	//cree un tableau contenant la liste des documents qui contiennent un  des termes
-	// de la requete et le tf-idf de chaque document
-	public ArrayList<String> matcherDocWordsV4(Request req, ArrayList<String> docs){
-		//Pour tous les docs on calcule tfidf et on les classe
-		Map<String,Float> map = new HashMap<>();
-		//System.out.println("declaration Map OK");
-		for (String doc :docs){
-			float res =  sumTermFrequencyV4(req, doc);
-			map.put(doc, res);
-		}
-
-		Object[] mapTrier = map.entrySet().toArray();
-		Arrays.sort(mapTrier, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				return ((Map.Entry<String, Float>) o2).getValue().compareTo(
-						((Map.Entry<String, Float>) o1).getValue());
-			}
-		});
-		ArrayList<String> listDocFinded = new ArrayList<String>();
-		int i = 0;
-		for (Object e : mapTrier) {
-			listDocFinded.add(((Map.Entry<String, Float>) e).getKey());
-			i ++;
-		}
-
-		/*for (String s : listDocFinded) {
-			System.out.println(s);
-		}
-		System.out.println("");*/
-
-		return listDocFinded;
-	}
-
-
-
-	/**
-	 * Permet de calculer le tfidf pour chaque document d'apres la requete donnee
-	 * @param req
-	 * @param docs
-	 * @return
-	 */
-	public ArrayList<String> matcherDocReqV4(Request req, ArrayList<String> docs){
-		return matcherDocWordsV4(req,docs);
-	}
-
-	public void matchAllV4(ArrayList<String> docs){
-		for (Request r : reqs){
-			r.setListDoc(matcherDocReqV4(r, docs));
-			getCosineSimilarity(r); //calculates cosine similarity  
-		}
-	}
 
 
 	//###################################################
 	// V5 : prise en compte des scores (title, h1 et h2)
 	//###################################################
-	
+
 	public float sumTermFrequencyV5(Request r, String doc){
 		int tf = 0;
 		int scoreDoc;
