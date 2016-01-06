@@ -313,7 +313,7 @@ public class Matcher {
 				//System.out.println("tf = "+ tf);
 			}			
 			tfidfvectors[count] = tf;
-			termVector[count] = (float) (1.0 / r.getReqTerm().size());
+			termVector[count] = (float) (1.0 / r.getReqTerm().size())* t.getIdf();
 
 			//System.out.println("tfidfvectors[count] = "+ tfidfvectors[count]);
 			count++;
