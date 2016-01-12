@@ -24,8 +24,8 @@ public class Main {
 		//main(1);
 		//main(2);
 		//main(3);
-		main(4);
-		//main(5);
+		//main(4);
+		main(5);
 		//testDB();
 	}
 
@@ -60,14 +60,14 @@ public class Main {
 	public static void main(int version){
 		System.out.println("Initialisation des tables sql");
 		/* comment the following lines if you have already imported the corpus*/
-		/*
+		
 		if (version == 5) {
 			fillDb.fillDatabaseWithAllFiles(true);
 		}
 		else {
 			fillDb.fillDatabaseWithAllFiles(false);
 		}
-		*/
+		
 		db.loadDB();
 		//On charge le Corpus
 		docs = FileManager.listerRepertoire();

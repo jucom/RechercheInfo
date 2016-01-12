@@ -87,8 +87,8 @@ public class Parser {
 		}
 		return list;
 	}
-	
-	/*public static void testParser() {
+	/*
+	public static void testParser() {
 		String input = "./CORPUS/CORPUS/D88.html";
 		String stopListPath = "./stopliste.txt";
 		File inputFile = new File(input);
@@ -99,8 +99,6 @@ public class Parser {
 
 	public static void main( String args[] ){
 		testParser();
-	}*/
-	
-	
-
+	}
+	*/
 }

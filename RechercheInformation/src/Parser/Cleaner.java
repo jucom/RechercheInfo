@@ -42,7 +42,7 @@ public class Cleaner {
 			token = token.replace("’", "");
 			token = token.replace("©", "");
 			token = token.replace("\\P{Graph}","");
-			if (token.length() > 2) {
+			if (token.length() > 0) {
 				if (token.length() > 7) {
 					s2 = token.substring(0,7);
 				}
@@ -64,7 +64,7 @@ public class Cleaner {
 	public static ArrayList<String> cleanString(String s) {
 		ArrayList<String> list = new ArrayList<String>();
 		s = normalize(s);
-		s = removeNumbers(s);
+		//s = removeNumbers(s);
 		s = clean(s);
 		String[] tokens = tokenize(s);
 		list = troncate(tokens);
