@@ -3,9 +3,10 @@ package reformulation;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import sparqlclient.SparqlClient;
+
 import model.Request;
 
-import sparqlclient.SparqlClient;
 
 public class Reformulation {
 	
