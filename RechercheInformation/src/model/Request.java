@@ -10,6 +10,7 @@ public class Request {
 	private String name;
 	private String req;
 	private ArrayList<String> cleanReq;
+	private ArrayList<String> keyWords;
 	private ArrayList<Term> reqTerm; 
 	private int nbDocPertinent;
 	private int nbDocFinded;
@@ -154,6 +155,13 @@ public class Request {
 		this.cleanReq = cleanReq;
 	}
 	
+	public ArrayList<String> getKeyWords() {
+		return keyWords;
+	}
+
+	public void setKeyWords(ArrayList<String> keyWords) {
+		this.keyWords = keyWords;
+	}
 
 	public ArrayList<Term> getReqTerm() {
 		return reqTerm;
