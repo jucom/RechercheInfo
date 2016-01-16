@@ -11,6 +11,7 @@ public class Request {
 	private String req;
 	private ArrayList<String> cleanReq;
 	private ArrayList<String> keyWords;
+	private ArrayList<String> reformulation;
 	private ArrayList<Term> reqTerm; 
 	private int nbDocPertinent;
 	private int nbDocFinded;
@@ -25,6 +26,8 @@ public class Request {
 		this.nbDocPertinent = 0;
 		this.nbDocsInQrels = 0 ;
 		this.reqTerm = new ArrayList<Term>();
+		this.reformulation = new ArrayList<String>();
+		this.keyWords = new ArrayList<String>();
 	}
 	
 	public static ArrayList<Request> createListReq(String path) {
@@ -155,12 +158,38 @@ public class Request {
 		this.cleanReq = cleanReq;
 	}
 	
+	
 	public ArrayList<String> getKeyWords() {
 		return keyWords;
 	}
 
 	public void setKeyWords(ArrayList<String> keyWords) {
 		this.keyWords = keyWords;
+	}
+
+	
+	public ArrayList<String> getReformulation() {
+		return reformulation;
+	}
+
+	public void setReformulation(ArrayList<String> reformulation) {
+		this.reformulation = reformulation;
+	}
+	
+	/**
+	 * Add term to Reformulation List
+	 * @param term
+	 */
+	public void addReqTermReformulation(String term) {
+		this.reformulation.add(term);
+	}
+	
+	/**
+	 * Add list to Reformulation List
+	 * @param term
+	 */
+	public void addListToReformulation(ArrayList<String> list) {
+		this.reformulation.addAll(list);
 	}
 
 	public ArrayList<Term> getReqTerm() {
