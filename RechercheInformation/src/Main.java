@@ -21,11 +21,11 @@ public class Main {
 
 
 	public static void main( String args[] ){
-		//main(1);
+		main(1);
 		//main(2);
 		//main(3);
 		//main(4);
-		main(5);
+		//main(5);
 		//testDB();
 	}
 
@@ -65,7 +65,7 @@ public class Main {
 			fillDb.fillDatabaseWithAllFiles(true);
 		}
 		else {
-			fillDb.fillDatabaseWithAllFiles(false);
+			//fillDb.fillDatabaseWithAllFiles(false);
 		}
 		
 		db.loadDB();

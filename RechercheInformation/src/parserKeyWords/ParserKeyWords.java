@@ -1,0 +1,59 @@
+package parserKeyWords;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+public class ParserKeyWords {
+	
+	public final static String FILE = "requetes.html";
+	public Map<String, Collection<String>> map ;
+	
+	public static Map<String, Collection<String>> parseKeyWordsDocument(File input) {
+		Document doc = null;
+		Map<String, Collection<String>> map = new HashMap<String, Collection<String>>();
+		ArrayList<String> listOfKeyWords = new ArrayList<String>();
+		try {
+			doc = Jsoup.parse(input,"UTF-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    for ( Element element : doc.getElementsByTag("h2") )
+	    {	    		    	
+	        String reqName = element.text();
+	        //System.out.println(reqName);
+	        // on recupere le contenu de la premiere sous balise "dd"
+	        Element subElement = element.nextElementSibling();
+	        String keywords = subElement.getElementsByTag("dd").get(0).text();
+	        String[] list = keywords.split(",");
+	        for (String s : list) {
+	        	listOfKeyWords.add(s.trim());
+	        }
+	        map.put(reqName, listOfKeyWords); 
+	        // reinit list
+	        listOfKeyWords = new ArrayList<String>();
+	    }
+	    return map;		
+	}
+	
+	public static Collection<String> getKeyWords(String docName, Map<String, Collection<String>> map) {
+		return map.get(docName);
+	}
+	
+	public static void main(String[] args) {
+		File inputFile = new File(FILE);
+		Map<String, Collection<String>> map = parseKeyWordsDocument(inputFile);
+		Collection<String> keywordsDoc = getKeyWords("Q3", map);
+		for (String s : keywordsDoc) {
+			System.out.println(s);
+		}
+	}
+
+}
