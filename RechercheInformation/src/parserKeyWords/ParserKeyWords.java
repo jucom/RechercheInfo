@@ -19,7 +19,7 @@ public class ParserKeyWords {
 	/**
 	 * parse html file describing the queries
 	 * @param input
-	 * @return Map<querieID, list of keywords of the request>
+	 * @return Map<queryID, list of keywords of the request>
 	 */
 	public static Map<String, Collection<String>> parseKeyWordsDocument(File input) {
 		Document doc = null;
@@ -49,7 +49,7 @@ public class ParserKeyWords {
 	}
 	
 	/**
-	 * getting the keywords of a querie
+	 * getting the keywords of a query
 	 * @param docName
 	 * @param map
 	 * @return list of keywords
