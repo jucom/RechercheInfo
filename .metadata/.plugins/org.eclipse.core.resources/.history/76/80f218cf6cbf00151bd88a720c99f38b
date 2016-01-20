@@ -71,12 +71,6 @@ public class ParserWithTags extends Parser {
 		return s;
 	}
 	
-	/**
-	 * parse a file with tags 
-	 * @param filePath
-	 * @param stopListPath
-	 * @return
-	 */
 	public static ArrayList<StringWithScore> parsingWithTags(File filePath, String stopListPath) {
 		ArrayList<StringWithScore> listOfStringsWithScore = initParsingWithTags(filePath);
 		Cleaner.cleanStringWithScore(listOfStringsWithScore);

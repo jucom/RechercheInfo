@@ -12,13 +12,6 @@ import org.jsoup.nodes.TextNode;
 
 public class ParserWithTags extends Parser {
 	
-	/**
-	 * parse a document and get informations about some html tags (h1,h2...)
-	 * usefull for the indexation with html tags (score is used)
-	 * @param input
-	 * @param charsetName
-	 * @return
-	 */
 	public static ArrayList<StringWithScore> parseDocumentWithTags(File input, String charsetName) {
 		Document doc = null;
 		ArrayList<StringWithScore> listOfTextWithScore = new ArrayList<StringWithScore>();
@@ -53,11 +46,6 @@ public class ParserWithTags extends Parser {
 	    return listOfTextWithScore;		
 	}
 	
-	/**
-	 * initialization : call parseDocumentWithTags with the correct encoding
-	 * @param filePath
-	 * @return
-	 */
 	public static ArrayList<StringWithScore> initParsingWithTags(File filePath) {
 		String[] isoFiles = {"D110.html","D125.html","D77.html","D93.html"};
 		String[] unknown8bitFiles = {"D117.html","D118.html","D12.html","D44.html","D46.html","D49.html","D75.html","D89.html","D90.html"};
@@ -71,12 +59,6 @@ public class ParserWithTags extends Parser {
 		return s;
 	}
 	
-	/**
-	 * parse a file with tags 
-	 * @param filePath
-	 * @param stopListPath
-	 * @return
-	 */
 	public static ArrayList<StringWithScore> parsingWithTags(File filePath, String stopListPath) {
 		ArrayList<StringWithScore> listOfStringsWithScore = initParsingWithTags(filePath);
 		Cleaner.cleanStringWithScore(listOfStringsWithScore);

@@ -8,40 +8,23 @@ import java.util.Set;
 
 public class Cleaner {
 
-	/**
-	 * remove &nbsp 
-	 * @param s
-	 * @return
-	 */
+	// remove &nbsp 
 	public static String clean(String s) {
 		String cleaned = s.replace("\u00a0","");
 		return cleaned;
 	}
 
-	/**
-	 * remove numbers
-	 * @param s
-	 * @return
-	 */
+	// remove numbers
 	public static String removeNumbers(String s) {
 		String cleaned = s.replaceAll("\\p{Digit}","");
 		return cleaned;
 	}
 	
-	/**
-	 * string normalization : removes accents etc
-	 * @param input
-	 * @return String normalized
-	 */
 	public static String normalize(String input) {
 		return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
 	}
 	
-	/**
-	 * split words
-	 * @param s
-	 * @return
-	 */
+	// split words
 	public static String[] tokenize(String s) {
 		//StringTokenizer multiTokenizer = new StringTokenizer(s, " !#$%&'()*–+,-./:;<=>?@[]^_`{|}\t\n\r~");
 		String[] tokens = s.split("[\\s\\p{Punct}]+");
@@ -49,11 +32,7 @@ public class Cleaner {
 	}
 	
 
-	/**
-	 * troncate (7 chars) and clean some special chars
-	 * @param tokens
-	 * @return
-	 */
+	// troncate (7 chars) and clean some special chars
 	public static ArrayList<String> troncate(String[] tokens) {
 		ArrayList<String> tokenList = new ArrayList<String>();
 		String s2 = null;
@@ -78,23 +57,15 @@ public class Cleaner {
 		return tokenList;		
 	}
 	
-	/**
-	 * troncate (7 chars) and clean some special chars
-	 * @param tokens
-	 * @param sws
-	 */
+	// troncate (7 chars) and clean some special chars
 	public static void troncateWithScore(String[] tokens, StringWithScore sws) {
 		ArrayList<String> tokenList = troncate(tokens);
 		sws.setCleanedContentList(tokenList);
 	}
 	
-	/**
-	 * deleteDuplicateWords
-	 * @param tokens
-	 * @return
-	 */
 	public static ArrayList<String> deleteDuplicateWords(ArrayList<String> tokens) {
 		ArrayList<String> listWithoutDuplicates = new ArrayList<>();
+		// add elements to al, including duplicates
 		Set<String> hs = new HashSet<>();
 		hs.addAll(listWithoutDuplicates);
 		listWithoutDuplicates.clear();
@@ -102,11 +73,6 @@ public class Cleaner {
 		return listWithoutDuplicates;
 	}
 	
-	/**
-	 * clean a string
-	 * @param s
-	 * @return
-	 */
 	public static ArrayList<String> cleanString(String s) {
 		ArrayList<String> list = new ArrayList<String>();
 		s = normalize(s);
@@ -117,21 +83,6 @@ public class Cleaner {
 		return list;
 	}
 	
-	/**
-	 * clean string and delete duplicate words
-	 * @param s
-	 * @return
-	 */
-	public static ArrayList<String> cleanReformulationString(String s) {
-		ArrayList<String> list = cleanString(s);
-		list = deleteDuplicateWords(list);
-		return list;
-	}
-	
-	/**
-	 * clean string with score (tag version)
-	 * @param s
-	 */
 	public static void cleanStringWithScore(ArrayList<StringWithScore> s) {
 		for (StringWithScore sws : s) {
 			sws.setContent(normalize(sws.getContent()));
@@ -142,10 +93,6 @@ public class Cleaner {
 		}
 	}
 	
-	/**
-	 * remove empty items
-	 * @param s
-	 */
 	public static void cleanListOfStringWithScore(ArrayList<StringWithScore> s) {
 		Iterator<StringWithScore> iterator = s.iterator();
 		while (iterator.hasNext()) {
@@ -156,10 +103,6 @@ public class Cleaner {
 		}				
 	}
 
-	/**
-	 * print an arraylist of string
-	 * @param list
-	 */
 	public static void printStringArrayList(ArrayList<String> list) {
 		for (String e : list) {
 			System.out.println(e);

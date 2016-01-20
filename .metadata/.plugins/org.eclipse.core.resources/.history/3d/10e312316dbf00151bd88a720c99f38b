@@ -14,11 +14,7 @@ import model.Cst;
 
 public class FileManager {
 
-	/**
-	 * list the documents in a repository
-	 * @param path
-	 * @return
-	 */
+
 	public static ArrayList<String> listerRepertoire(String path){
 		File repertoire = new File(path);
 		File [] listefichiers = null;
@@ -44,30 +40,15 @@ public class FileManager {
 		return list;
 	}
 
-	/**
-	 * listerRepertoire with Cst.docsPath
-	 * @return
-	 */
 	public static ArrayList<String> listerRepertoire(){
 		return listerRepertoire(Cst.docsPath);
 	}
 
-	/**
-	 * get the number of documents in the corpus
-	 * @return
-	 */
 	public static int NbDocInCorpus() {
 		return listerRepertoire().size();
 	}
 
 
-	/**
-	 * readFileContent
-	 * @param fileName
-	 * @param encoding
-	 * @return
-	 * @throws IOException
-	 */
 	public static ArrayList<String> readFileContent(final String fileName, final String encoding) throws IOException {
 		// Recuperation du fichier
 		File file = new File(fileName);
@@ -92,11 +73,6 @@ public class FileManager {
 		return list;
 	}
 
-	/**
-	 * get the number of words in a documents
-	 * @param filePath
-	 * @return
-	 */
 	public static int nbWordsInDoc(String filePath){
 		File inputFile = new File(filePath);
 		ArrayList<String> list = Parser.parsing(inputFile, Cst.stopListPath);

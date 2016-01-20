@@ -72,11 +72,6 @@ public class Parser {
 		return list;
 	}
 	
-	/**
-	 * initialization : call parsedocument with the correct encoding
-	 * @param filePath
-	 * @return
-	 */
 	public static String initParsing(File filePath) {
 		String[] isoFiles = {"D110.html","D125.html","D77.html","D93.html"};
 		String[] unknown8bitFiles = {"D117.html","D118.html","D12.html","D44.html","D46.html","D49.html","D75.html","D89.html","D90.html"};
@@ -90,12 +85,6 @@ public class Parser {
 		return s;
 	}
 	
-	/**
-	 * main function
-	 * @param filePath
-	 * @param stopListPath
-	 * @return
-	 */
 	public static ArrayList<String> parsing(File filePath, String stopListPath) {
 		ArrayList<String> list = new ArrayList<String>();
 		String s = initParsing(filePath);
