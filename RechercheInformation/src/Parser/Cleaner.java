@@ -96,7 +96,7 @@ public class Cleaner {
 	public static ArrayList<String> deleteDuplicateWords(ArrayList<String> tokens) {
 		ArrayList<String> listWithoutDuplicates = new ArrayList<>();
 		Set<String> hs = new HashSet<>();
-		hs.addAll(listWithoutDuplicates);
+		hs.addAll(tokens);
 		listWithoutDuplicates.clear();
 		listWithoutDuplicates.addAll(hs);
 		return listWithoutDuplicates;
@@ -165,7 +165,5 @@ public class Cleaner {
 			System.out.println(e);
 		}
 	}
-
-
-
+	
 }
