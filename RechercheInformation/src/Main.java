@@ -53,7 +53,6 @@ public class Main {
 		reqs = Request.createListReq(Cst.reqsPath);
 		
 		if (reformulation){
-			Reformulation reformu = new Reformulation();
 			//On charge les requetes depuis le fichier html
 			File inputFile = new File(Cst.requestFile);
 			Map<String, Collection<String>> map = ParserKeyWords.parseKeyWordsDocument(inputFile);	
@@ -61,9 +60,9 @@ public class Main {
 				String reqName = result.getKey();
 				for (Request r : reqs) {
 					if (r.getName().equals(reqName)) {
-						System.out.println("Trouve la requete : " + r);
+						System.out.println("Trouve la requete : " + r.getName());
 						r.setKeyWords((ArrayList<String>) result.getValue());
-						reformu.reformulation(r);
+						Reformulation.reformulation(r);
 						r.setCleanReq(Cleaner.cleanReformulationString(r.getReformulation()));
 						break;
 					}

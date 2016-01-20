@@ -22,13 +22,17 @@ public class Reformulation {
 	}
 
 
-	public Reformulation(){
+	public static void reformulation(Request req){
 		SparqlClient sparqlClient = new SparqlClient("localhost:3030/space");
 		String query = "ASK WHERE { ?s ?p ?o }";
 		boolean serverIsUp = sparqlClient.ask(query);
 		if (serverIsUp) {
 			//String rs = "";
 			System.out.println("server is UP");
+			//labelLinkToProp(sparqlClient,"lieu naissance", "Omar Sy");
+			reformulation(req, sparqlClient);
+			System.out.println(req.getReformulation());
+
 		} else {
 			System.out.println("service is DOWN");
 		}
@@ -39,7 +43,7 @@ public class Reformulation {
 	 * @param req
 	 * @param sparqlClient
 	 */
-	public void reformulation(Request req){
+	public static void reformulation(Request req, SparqlClient sparqlClient){
 
 		ArrayList<String> resProp, resLab0, resLab1 = new ArrayList<String>();
 
@@ -70,6 +74,7 @@ public class Reformulation {
 			req.addReqTermReformulation(req.getKeyWords().get(0));
 		}
 
+		System.out.println("resProp " + req.getReformulation());
 		for (String p : resProp){
 			for (String l : resLab1){
 				ArrayList<String> res1 =  new ArrayList<String>();
@@ -169,29 +174,5 @@ public class Reformulation {
 		}
 		return res;
 	} 
-
-
-	/*	
-	public static void main(String[] args){
-		SparqlClient sparqlClient = new SparqlClient("localhost:3030/space");
-		String query = "ASK WHERE { ?s ?p ?o }";
-		boolean serverIsUp = sparqlClient.ask(query);
-		if (serverIsUp) {
-			//String rs = "";
-			System.out.println("server is UP");
-			//labelLinkToProp(sparqlClient,"lieu naissance", "Omar Sy");
-			Request req = new Request("Test");
-			ArrayList<String> r = new ArrayList<String>();
-			r.add("prix");
-			r.add("Omar Sy");
-			r.add("Globes cristal 2012");
-			req.setKeyWords(r);
-			reformulation(req, sparqlClient);
-			System.out.println(req.getReformulation());
-
-		} else {
-			System.out.println("service is DOWN");
-		}
-	}*/
 
 }

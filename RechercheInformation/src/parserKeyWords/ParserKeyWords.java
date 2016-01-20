@@ -58,15 +58,18 @@ public class ParserKeyWords {
 		return map.get(docName);
 	}
 	
-	/*
+	
 	public static void main(String[] args) {
 		File inputFile = new File(FILE);
 		Map<String, Collection<String>> map = parseKeyWordsDocument(inputFile);
-		Collection<String> keywordsDoc = getKeyWords("Q3", map);
-		for (String s : keywordsDoc) {
+		//Collection<String> keywordsDoc = getKeyWords("Q3", map);
+		for (Map.Entry<String, Collection<String>> res : map.entrySet()){
+			System.out.println(res.getKey());
+		for (String s : res.getValue()) {
 			System.out.println(s);
 		}
+		}
 	}
-	*/
+	
 
 }
