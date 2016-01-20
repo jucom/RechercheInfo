@@ -61,6 +61,7 @@ public class Main {
 				String reqName = result.getKey();
 				for (Request r : reqs) {
 					if (r.getName().equals(reqName)) {
+						System.out.println("Trouve la requete : " + r);
 						r.setKeyWords((ArrayList<String>) result.getValue());
 						reformu.reformulation(r);
 						r.setCleanReq(Cleaner.cleanReformulationString(r.getReformulation()));

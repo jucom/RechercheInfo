@@ -1,6 +1,7 @@
 package reformulation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -10,8 +11,8 @@ import model.Request;
 
 
 public class Reformulation {
-	
-	SparqlClient sparqlClient;
+
+	private SparqlClient sparqlClient;
 
 	/**
 	 * @return SparqlClient
@@ -20,7 +21,7 @@ public class Reformulation {
 		return sparqlClient;
 	}
 
-	
+
 	public Reformulation(){
 		SparqlClient sparqlClient = new SparqlClient("localhost:3030/space");
 		String query = "ASK WHERE { ?s ?p ?o }";
@@ -38,59 +39,54 @@ public class Reformulation {
 	 * @param req
 	 * @param sparqlClient
 	 */
-	public static void reformulation(Request req, SparqlClient sparqlClient){
-		
-			ArrayList<String> resProp, resLab0, resLab1 = new ArrayList<String>();
-			System.out.println("req.getKeyWords().get(req.getKeyWords().size()-2) : " + req.getKeyWords().get(req.getKeyWords().size()-2));
+	public void reformulation(Request req){
 
-			
-			
+		ArrayList<String> resProp, resLab0, resLab1 = new ArrayList<String>();
+
+
+
+		//on chercher les correspondances dans l'ontologie
+		resProp = labelsOfRessource(sparqlClient,req.getKeyWords().get(req.getKeyWords().size()-2));
+		req.addListToReformulation(resProp); 
+		//on ajoute keyword à la reformulation
+		req.addReqTermReformulation(req.getKeyWords().get(req.getKeyWords().size()-2));
+
+
+
+		//on chercher les correspondances dans l'ontologie
+		resLab1 = labelsOfRessource(sparqlClient,req.getKeyWords().get(req.getKeyWords().size()-1));
+		req.addListToReformulation(resLab1);
+		//on ajoute keyword à la reformulation
+		req.addReqTermReformulation(req.getKeyWords().get(req.getKeyWords().size()-1));
+
+
+
+		//si trois terme pas oublier le dernier
+		if (req.getKeyWords().size() == 3){
 			//on chercher les correspondances dans l'ontologie
-			resProp = labelsOfRessource(sparqlClient,req.getKeyWords().get(req.getKeyWords().size()-2));
-			System.out.println("req.getKeyWords().get(req.getKeyWords().size()-1) : " + req.getKeyWords().get(req.getKeyWords().size()-1));
-			req.addListToReformulation(resProp); 
+			resLab0 = labelsOfRessource(sparqlClient,req.getKeyWords().get(0));
+			req.addListToReformulation(resLab0);
 			//on ajoute keyword à la reformulation
-			req.addReqTermReformulation(req.getKeyWords().get(req.getKeyWords().size()-2));
-			
-	
-			
-			//on chercher les correspondances dans l'ontologie
-			resLab1 = labelsOfRessource(sparqlClient,req.getKeyWords().get(req.getKeyWords().size()-1));
-			req.addListToReformulation(resLab1);
-			//on ajoute keyword à la reformulation
-			req.addReqTermReformulation(req.getKeyWords().get(req.getKeyWords().size()-1));
-			
-			System.out.println("resLab1 : " + req.getReformulation());
-			System.out.println("resProp : " + req.getReformulation());
+			req.addReqTermReformulation(req.getKeyWords().get(0));
+		}
 
-			
-			//si trois terme pas oublier le dernier
-			if (req.getKeyWords().size() == 3){
-				//on chercher les correspondances dans l'ontologie
-				resLab0 = labelsOfRessource(sparqlClient,req.getKeyWords().get(0));
-				req.addListToReformulation(resLab0);
-				//on ajoute keyword à la reformulation
-				req.addReqTermReformulation(req.getKeyWords().get(0));
-			}
-			
-			System.out.println("resProp " + req.getReformulation());
-			for (String p : resProp){
-				for (String l : resLab1){
-					ArrayList<String> res1 =  new ArrayList<String>();
-					ArrayList<String> res2 =  new ArrayList<String>();
+		for (String p : resProp){
+			for (String l : resLab1){
+				ArrayList<String> res1 =  new ArrayList<String>();
+				ArrayList<String> res2 =  new ArrayList<String>();
 
-					res2 = labelLinkToProp(sparqlClient,l,p);
-					res1 = labelLinkToProp(sparqlClient,p,l);
-					if (res1.size() != 0){
-						req.addListToReformulation(res1);
-					}
-					if (res2.size() != 0){
-						req.addListToReformulation(res2);
-					}
-
+				res2 = labelLinkToProp(sparqlClient,l,p);
+				res1 = labelLinkToProp(sparqlClient,p,l);
+				if (res1.size() != 0){
+					req.addListToReformulation(res1);
 				}
+				if (res2.size() != 0){
+					req.addListToReformulation(res2);
+				}
+
 			}
-		
+		}
+
 
 	}   
 
@@ -110,11 +106,18 @@ public class Reformulation {
 				+"UNION {?res rdfs:label \""+label +"\".\n"
 				+"?res rdfs:label ?label.}\n"
 				+ "}\n";
-		Iterable<Map<String, String>> results = sparqlClient.select(query);
+		Iterable<Map<String, String>> results;
+		try {
+			results = sparqlClient.select(query);
+		} catch (Exception ex) {
+			results = null;
+		}
 		ArrayList<String> res = new ArrayList<String>();
-		for (Map<String, String> result : results) {
-			//System.out.println(result.get("label"));
-			res.add(result.get("label"));
+		if (results != null) {
+			for (Map<String, String> result : results) {
+				//System.out.println(result.get("label"));
+				res.add(result.get("label"));
+			}
 		}
 		return res;
 	}    
@@ -167,8 +170,8 @@ public class Reformulation {
 		return res;
 	} 
 
-	
-	
+
+	/*	
 	public static void main(String[] args){
 		SparqlClient sparqlClient = new SparqlClient("localhost:3030/space");
 		String query = "ASK WHERE { ?s ?p ?o }";
@@ -189,6 +192,6 @@ public class Reformulation {
 		} else {
 			System.out.println("service is DOWN");
 		}
-	}
+	}*/
 
 }

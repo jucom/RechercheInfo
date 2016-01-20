@@ -43,6 +43,9 @@ public class Request {
 		ArrayList<String> reqDoc = FileManager.listerRepertoire(path);
 		ArrayList<String> list = new ArrayList<String>();
 		for (String name : reqDoc){
+			System.out.println(name);
+			//String[] splited = name.split(".");
+			//System.out.println(splited);
 			Request r = new Request(name);
 			try {
 				list = FileManager.readFileContent(path+name, "utf-8");
@@ -260,7 +263,7 @@ public class Request {
 	
 	@Override
 	public String toString() {
-		return "Request [name=" + name + "\n req=" + req + "\n cleanReq="
+		return "Request [name=" + name + "\n req=" + req + "\n reformulation=" + reformulation + "\n cleanReq="
 				+ cleanReq + "\n nbDocPertinent=" + nbDocPertinent
 				+ "\n nbDocFinded=" + nbDocFinded + "\n nbDocsInQrels="
 				+ nbDocsInQrels +  "]";
