@@ -1,6 +1,12 @@
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
+import Parser.Cleaner;
 import Parser.FileManager;
+import parserKeyWords.*;
+import reformulation.Reformulation;
 
 import matcher.Matcher;
 import matcher.Performance;
@@ -21,43 +27,14 @@ public class Main {
 
 
 	public static void main( String args[] ){
-		main(1);
-		//main(2);
-		//main(3);
-		//main(4);
-		//main(5);
-		//testDB();
+		main(1, true);
+		//main(2, false);
+		//main(3, false);
+		//main(4, false);
+		//main(5, false);
 	}
 
-	public static void testDB() {
-		db.loadDB();
-		db.deleteTables();
-		db.createTable();
-		db.setAutoCommit(false);
-		db.insertWordOrDoc("WORDS", "coucou");
-		db.insertWordOrDoc("DOCS", "D2");
-		db.insertWordOrDoc("WORDS", "chat");
-		db.insertWordOrDoc("DOCS", "D1");
-		System.out.println("insertIndexation(1, 1)");
-		db.insertIndexation(1, 1);
-		System.out.println("insertIndexation(1, 2)");
-		db.insertIndexation(1, 2);
-		System.out.println("insertIndexation(2, 2)");
-		db.insertIndexationWithFrequency(2, 2, 2);
-		db.insertIndexationWithFrequencyAndScore(2, 1, 2,100);
-		db.commit();
-		System.out.println("***");
-		System.out.println(db.wordExists("coucou"));
-		System.out.println(db.wordExists("pizza"));
-		System.out.println(db.getID("WORDS", "coucou"));
-		System.out.println(db.getID("WORDS", "pizza"));
-		System.out.println(db.getNbDocContainingWord("chat"));
-		System.out.println(db.getOccWordDoc("chat", "D2"));
-		System.out.println(db.getScore("D2", "chat"));
-		System.out.println(db.getScore("D2", "coucou"));
-	}
-
-	public static void main(int version){
+	public static void main(int version, boolean reformulation){
 		System.out.println("Initialisation des tables sql");
 		/* comment the following lines if you have already imported the corpus*/
 		
@@ -71,8 +48,30 @@ public class Main {
 		db.loadDB();
 		//On charge le Corpus
 		docs = FileManager.listerRepertoire();
-		//On charge les requetes
+		
+		//On charge les requetes depuis les fichiers txt
 		reqs = Request.createListReq(Cst.reqsPath);
+		
+		if (reformulation){
+			Reformulation reformu = new Reformulation();
+			//On charge les requetes depuis le fichier html
+			File inputFile = new File(Cst.requestFile);
+			Map<String, Collection<String>> map = ParserKeyWords.parseKeyWordsDocument(inputFile);	
+			for (Map.Entry<String, Collection<String>> result : map.entrySet()) {
+				String reqName = result.getKey();
+				for (Request r : reqs) {
+					if (r.getName().equals(reqName)) {
+						r.setKeyWords((ArrayList<String>) result.getValue());
+						reformu.reformulation(r);
+						r.setCleanReq(Cleaner.cleanReformulationString(r.getReformulation()));
+						break;
+					}
+				}
+			}
+			
+			
+		}
+		
 		//On initialise le matcher avec la liste des requetes et des docs
 		matcher = new Matcher(reqs, db);
 
@@ -91,20 +90,6 @@ public class Main {
 		}
 		db.closeDB();
 	}
-
-
-	/*public static void matcherTest(){
-		  ArrayList<String> docs = new ArrayList<String>();
-		  docs = FileManager.listerRepertoire("/home/compagnon/Documents/5A/RI/RechercheInfos/RechercheInformation/CORPUS/CORPUS");
-		  //matcher.CleanRequest("Le compagnon de sa soeur est le coucou de sa femme");
-		  ArrayList<String> terms = matcher.CleanRequest("personnes, Intouchables");
-		  //matcher.SumTermFrequency( terms, "D15.html");
-		  Object[] mapTrier = matcher.MatcherDocWords(terms, docs);
-		  for (Object e : mapTrier) {
-				System.out.println(((Map.Entry<String, Integer>) e).getKey() + " : "
-						+ ((Map.Entry<String, Integer>) e).getValue());
-			}
-	  }*/
 
 
 }
