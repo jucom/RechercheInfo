@@ -58,7 +58,6 @@ public class ParserKeyWords {
 		return map.get(docName);
 	}
 	
-	/*
 	public static void main(String[] args) {
 		File inputFile = new File(FILE);
 		Map<String, Collection<String>> map = parseKeyWordsDocument(inputFile);
@@ -67,6 +66,5 @@ public class ParserKeyWords {
 			System.out.println(s);
 		}
 	}
-	*/
 
 }

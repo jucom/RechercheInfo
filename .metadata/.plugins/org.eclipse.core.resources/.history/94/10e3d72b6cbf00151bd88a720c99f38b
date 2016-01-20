@@ -142,10 +142,6 @@ public class Cleaner {
 		}
 	}
 	
-	/**
-	 * remove empty items
-	 * @param s
-	 */
 	public static void cleanListOfStringWithScore(ArrayList<StringWithScore> s) {
 		Iterator<StringWithScore> iterator = s.iterator();
 		while (iterator.hasNext()) {
@@ -156,10 +152,6 @@ public class Cleaner {
 		}				
 	}
 
-	/**
-	 * print an arraylist of string
-	 * @param list
-	 */
 	public static void printStringArrayList(ArrayList<String> list) {
 		for (String e : list) {
 			System.out.println(e);

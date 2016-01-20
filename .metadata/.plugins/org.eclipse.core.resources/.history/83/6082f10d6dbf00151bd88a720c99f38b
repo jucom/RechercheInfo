@@ -90,12 +90,6 @@ public class Parser {
 		return s;
 	}
 	
-	/**
-	 * main function
-	 * @param filePath
-	 * @param stopListPath
-	 * @return
-	 */
 	public static ArrayList<String> parsing(File filePath, String stopListPath) {
 		ArrayList<String> list = new ArrayList<String>();
 		String s = initParsing(filePath);

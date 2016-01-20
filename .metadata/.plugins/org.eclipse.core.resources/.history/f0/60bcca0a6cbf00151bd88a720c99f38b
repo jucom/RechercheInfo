@@ -117,21 +117,16 @@ public class Cleaner {
 		return list;
 	}
 	
-	/**
-	 * clean string and delete duplicate words
-	 * @param s
-	 * @return
-	 */
 	public static ArrayList<String> cleanReformulationString(String s) {
-		ArrayList<String> list = cleanString(s);
+		ArrayList<String> list = new ArrayList<String>();
+		s = normalize(s);
+		s = clean(s);
+		String[] tokens = tokenize(s);
+		list = troncate(tokens);
 		list = deleteDuplicateWords(list);
 		return list;
 	}
 	
-	/**
-	 * clean string with score (tag version)
-	 * @param s
-	 */
 	public static void cleanStringWithScore(ArrayList<StringWithScore> s) {
 		for (StringWithScore sws : s) {
 			sws.setContent(normalize(sws.getContent()));
@@ -142,10 +137,6 @@ public class Cleaner {
 		}
 	}
 	
-	/**
-	 * remove empty items
-	 * @param s
-	 */
 	public static void cleanListOfStringWithScore(ArrayList<StringWithScore> s) {
 		Iterator<StringWithScore> iterator = s.iterator();
 		while (iterator.hasNext()) {
@@ -156,10 +147,6 @@ public class Cleaner {
 		}				
 	}
 
-	/**
-	 * print an arraylist of string
-	 * @param list
-	 */
 	public static void printStringArrayList(ArrayList<String> list) {
 		for (String e : list) {
 			System.out.println(e);

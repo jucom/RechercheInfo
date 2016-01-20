@@ -156,10 +156,6 @@ public class Cleaner {
 		}				
 	}
 
-	/**
-	 * print an arraylist of string
-	 * @param list
-	 */
 	public static void printStringArrayList(ArrayList<String> list) {
 		for (String e : list) {
 			System.out.println(e);

@@ -52,13 +52,12 @@ public class ParserKeyWords {
 	 * getting the keywords of a querie
 	 * @param docName
 	 * @param map
-	 * @return list of keywords
+	 * @return
 	 */
 	public static Collection<String> getKeyWords(String docName, Map<String, Collection<String>> map) {
 		return map.get(docName);
 	}
 	
-	/*
 	public static void main(String[] args) {
 		File inputFile = new File(FILE);
 		Map<String, Collection<String>> map = parseKeyWordsDocument(inputFile);
@@ -67,6 +66,5 @@ public class ParserKeyWords {
 			System.out.println(s);
 		}
 	}
-	*/
 
 }

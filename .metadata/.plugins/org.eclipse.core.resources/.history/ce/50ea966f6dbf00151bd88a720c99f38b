@@ -92,11 +92,6 @@ public class FileManager {
 		return list;
 	}
 
-	/**
-	 * get the number of words in a documents
-	 * @param filePath
-	 * @return
-	 */
 	public static int nbWordsInDoc(String filePath){
 		File inputFile = new File(filePath);
 		ArrayList<String> list = Parser.parsing(inputFile, Cst.stopListPath);
