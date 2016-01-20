@@ -11,7 +11,7 @@ public class Request {
 	private String req;
 	private ArrayList<String> cleanReq;
 	private ArrayList<String> keyWords;
-	private ArrayList<String> reformulation;
+	private String reformulation;
 	private ArrayList<Term> reqTerm; 
 	private int nbDocPertinent;
 	private int nbDocFinded;
@@ -19,17 +19,25 @@ public class Request {
 	private ArrayList<String> listDoc;
 	private ArrayList<RequestRelevance> listRelevanceDocs;
 	
-	
+	/**
+	 * Constructeur
+	 * @param name
+	 */
 	public Request(String name) {
 		this.name = name;
 		this.nbDocFinded = 0;
 		this.nbDocPertinent = 0;
 		this.nbDocsInQrels = 0 ;
 		this.reqTerm = new ArrayList<Term>();
-		this.reformulation = new ArrayList<String>();
+		this.reformulation = "";
 		this.keyWords = new ArrayList<String>();
 	}
 	
+	/**
+	 * Cree la liste de requete
+	 * @param path
+	 * @return
+	 */
 	public static ArrayList<Request> createListReq(String path) {
 		ArrayList<Request> reqs = new ArrayList<Request>();
 		ArrayList<String> reqDoc = FileManager.listerRepertoire(path);
@@ -168,11 +176,11 @@ public class Request {
 	}
 
 	
-	public ArrayList<String> getReformulation() {
+	public String getReformulation() {
 		return reformulation;
 	}
 
-	public void setReformulation(ArrayList<String> reformulation) {
+	public void setReformulation(String reformulation) {
 		this.reformulation = reformulation;
 	}
 	
@@ -181,7 +189,7 @@ public class Request {
 	 * @param term
 	 */
 	public void addReqTermReformulation(String term) {
-		this.reformulation.add(term);
+		this.reformulation += term + ";";
 	}
 	
 	/**
@@ -189,7 +197,10 @@ public class Request {
 	 * @param term
 	 */
 	public void addListToReformulation(ArrayList<String> list) {
-		this.reformulation.addAll(list);
+		for (String s : list){
+			this.addReqTermReformulation(s);
+		}
+		
 	}
 
 	public ArrayList<Term> getReqTerm() {

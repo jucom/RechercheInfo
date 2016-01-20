@@ -11,53 +11,91 @@ import model.Request;
 
 public class Reformulation {
 	
+	SparqlClient sparqlClient;
+
+	/**
+	 * @return SparqlClient
+	 */
+	public SparqlClient getSparqlClient() {
+		return sparqlClient;
+	}
+
 	public static void main(String[] args){
 		SparqlClient sparqlClient = new SparqlClient("localhost:3030/space");
 		String query = "ASK WHERE { ?s ?p ?o }";
 		boolean serverIsUp = sparqlClient.ask(query);
 		if (serverIsUp) {
+			//String rs = "";
 			System.out.println("server is UP");
-			labelLinkToProp(sparqlClient,"lieu naissance", "Omar Sy");
+			//labelLinkToProp(sparqlClient,"lieu naissance", "Omar Sy");
+			Request req = new Request("Test");
+			ArrayList<String> r = new ArrayList<String>();
+			r.add("lieu naissance");
+			r.add("Omar Sy");
+			req.setKeyWords(r);
+			reformulation(req, sparqlClient);
+			System.out.println(req.getReformulation());
 
 		} else {
 			System.out.println("service is DOWN");
 		}
 	}
-
-	public void reformulation(Request req){
-		
-		SparqlClient sparqlClient = new SparqlClient("http://localhost:3030/space");
-
+	
+	public Reformulation(){
+		SparqlClient sparqlClient = new SparqlClient("localhost:3030/space");
 		String query = "ASK WHERE { ?s ?p ?o }";
 		boolean serverIsUp = sparqlClient.ask(query);
 		if (serverIsUp) {
+			//String rs = "";
 			System.out.println("server is UP");
-			
-			if (req.getKeyWords().size() == 2){
-				ArrayList<String> resProp, resLab = new ArrayList<String>();
-				resProp = labelsOfRessource(sparqlClient,req.getKeyWords().get(0));
-				resLab = labelsOfRessource(sparqlClient,req.getKeyWords().get(1));
-				req.addListToReformulation(resLab); //utile??
-				req.addListToReformulation(resProp); //utile??
-				for (String p : resProp){
-					for (String l : resProp){
-						ArrayList<String> res =  new ArrayList<String>();
-						res = labelLinkToProp(sparqlClient,p,l);
-						if (res.size() != 0){
-							req.addListToReformulation(resProp);
-						}
-						
-					}
-				}
-
-			}
-			
-
 		} else {
 			System.out.println("service is DOWN");
 		}
+	}
+
+	/**
+	 * Reformule une requête
+	 * @param req
+	 * @param sparqlClient
+	 */
+	public static void reformulation(Request req, SparqlClient sparqlClient){
+		
+		if (req.getKeyWords().size() == 2){
+			ArrayList<String> resProp, resLab = new ArrayList<String>();
+			//on chercher les correspondances dans l'ontologie
+			resProp = labelsOfRessource(sparqlClient,req.getKeyWords().get(0));
+			//on ajoute aux resultat la propriete initiale
+			resProp.add(req.getKeyWords().get(0));
+			//on chercher les correspondances dans l'ontologie
+			resLab = labelsOfRessource(sparqlClient,req.getKeyWords().get(1));
+			//on ajoute aux resultat la propriete initiale
+			resLab.add(req.getKeyWords().get(1));
+			req.addListToReformulation(resLab);
+			req.addListToReformulation(resProp); 
+			System.out.println("resProp " + req.getReformulation());
+			for (String p : resProp){
+				for (String l : resLab){
+					ArrayList<String> res1 =  new ArrayList<String>();
+					ArrayList<String> res2 =  new ArrayList<String>();
+
+					res2 = labelLinkToProp(sparqlClient,l,p);
+					res1 = labelLinkToProp(sparqlClient,p,l);
+					if (res1.size() != 0){
+						req.addListToReformulation(res1);
+					}
+					if (res2.size() != 0){
+						req.addListToReformulation(res2);
+					}
+
+				}
+			}
+
+		} else if (req.getKeyWords().size() == 3){
+
+		}
+
 	}   
-	
+
 	/**
 	 * @param sparqlClient
 	 * @param label
@@ -72,15 +110,14 @@ public class Reformulation {
 				+ "}\n";
 		Iterable<Map<String, String>> results = sparqlClient.select(query);
 		ArrayList<String> res = new ArrayList<String>();
-		System.out.println("Ensemble ou label = " + label);
 		for (Map<String, String> result : results) {
-			System.out.println(result.get("label"));
+			//System.out.println(result.get("label"));
 			res.add(result.get("label"));
 		}
 		return res;
 	}    
 
-	
+
 	/**
 	 * @param sparqlClient
 	 * @param label
@@ -95,15 +132,14 @@ public class Reformulation {
 				+ "}\n";
 		Iterable<Map<String, String>> results = sparqlClient.select(query);
 		ArrayList<String> res = new ArrayList<String>();
-		System.out.println("Ensemble ou label = " + label);
 		for (Map<String, String> result : results) {
-			System.out.println(result.get("label"));
+			//System.out.println(result.get("label"));
 			res.add(result.get("label"));
 		}
 		return res;
 	}    
-	
-	
+
+
 	/**
 	 * @param sparqlClient
 	 * @param prop
@@ -122,13 +158,12 @@ public class Reformulation {
 				+ "}\n";
 		Iterable<Map<String, String>> results = sparqlClient.select(query);
 		ArrayList<String> res = new ArrayList<String>();
-		System.out.println("Ensemble ou label = " + label);
 		for (Map<String, String> result : results) {
-			System.out.println(result.get("label"));
+			//System.out.println(result.get("label"));
 			res.add(result.get("label"));
 		}
 		return res;
 	} 
-	
-	
+
+
 }
