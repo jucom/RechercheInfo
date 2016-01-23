@@ -30,8 +30,8 @@ public class Main {
 	public static void main( String args[] ){
 		//main(1, 0);
 		//main(2, 0);
-		main(3, 1);
-		//main(4, 0);
+		//main(3, 2);
+		main(4, 0);
 		//main(5, 0);
 	}
 
@@ -76,7 +76,7 @@ public class Main {
 							if (r.isInReqTerm(s)){
 								Term t  = r.getTermInReqTerm(s);
 								if (reformulation == 2){
-									t.setIdf((float)30.0);
+									t.setIdf((float)100.0);
 								} else {
 									t.setIdf((float)0.0);
 								}

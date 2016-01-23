@@ -313,7 +313,8 @@ public class Matcher {
 				//System.out.println("tf = "+ tf);
 			}			
 			tfidfvectors[count] = tf;
-			termVector[count] = (float) (1.0 / r.getReqTerm().size())* t.getIdf();
+			//System.out.println("idf = " + t.getIdf()/3);
+			termVector[count] = (float) (10);
 
 			//System.out.println("tfidfvectors[count] = "+ tfidfvectors[count]);
 			count++;
@@ -342,8 +343,8 @@ public class Matcher {
 			float cos = cosineSimilarity((float[])tfidfReqVector.get(j), (float[])tfidfDocsVector.get(j));
 			if (cos != 0) {
 				//System.out.println(r.getCleanReq());
-				System.out.println("between " + reqList.get(j).getName() + " and " + docList.get(j) + "  =  "
-						+ cos);
+				//System.out.println("between " + reqList.get(j).getName() + " and " + docList.get(j) + "  =  "
+				//	+ cos);
 				if (curReq == reqList.get(j)) {
 					mapF.put(docList.get(j), cos);
 					ArrayList<String> listDocFinded = new ArrayList<String>();

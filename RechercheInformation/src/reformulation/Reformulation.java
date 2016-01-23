@@ -74,7 +74,7 @@ public class Reformulation {
 			req.addReqTermReformulation(req.getKeyWords().get(0));
 		}
 
-		System.out.println("resProp " + req.getReformulation());
+		//System.out.println("resProp " + req.getReformulation());
 		for (String p : resProp){
 			for (String l : resLab1){
 				ArrayList<String> res1 =  new ArrayList<String>();
