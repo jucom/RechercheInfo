@@ -12,6 +12,7 @@ import matcher.Matcher;
 import matcher.Performance;
 import model.Cst;
 import model.Request;
+import model.Term;
 import indexation.DatabaseMgmt;
 import indexation.FillDatabase;
 
@@ -27,23 +28,30 @@ public class Main {
 
 
 	public static void main( String args[] ){
-		main(1, true);
-		//main(2, false);
-		//main(3, false);
-		//main(4, false);
-		//main(5, false);
+		//main(1, 0);
+		//main(2, 0);
+		main(3, 1);
+		//main(4, 0);
+		//main(5, 0);
 	}
 
-	public static void main(int version, boolean reformulation){
+	/**
+	 * Main
+	 * @param version
+	 * @param reformulation (seulement à partir de la V3)
+	 * 		0 si pas de reformulation
+	 * 		1 ou 2 Sinon
+	 */
+	public static void main(int version, int reformulation){
 		System.out.println("Initialisation des tables sql");
 		/* comment the following lines if you have already imported the corpus*/
 		
-		if (version == 5) {
+		/*if (version == 5) {
 			fillDb.fillDatabaseWithAllFiles(true);
 		}
 		else {
-			//fillDb.fillDatabaseWithAllFiles(false);
-		}
+			fillDb.fillDatabaseWithAllFiles(false);
+		}*/
 		
 		db.loadDB();
 		//On charge le Corpus
@@ -52,7 +60,7 @@ public class Main {
 		//On charge les requetes depuis les fichiers txt
 		reqs = Request.createListReq(Cst.reqsPath);
 		
-		if (reformulation){
+		if (reformulation != 0){
 			//On charge les requetes depuis le fichier html
 			File inputFile = new File(Cst.requestFile);
 			Map<String, Collection<String>> map = ParserKeyWords.parseKeyWordsDocument(inputFile);	
@@ -63,6 +71,20 @@ public class Main {
 						System.out.println("Trouve la requete : " + r.getName());
 						r.setKeyWords((ArrayList<String>) result.getValue());
 						Reformulation.reformulation(r);
+						ArrayList<String> strAux = Cleaner.cleanReformulationString(r.getReformulation());
+						for (String s : strAux){
+							if (r.isInReqTerm(s)){
+								Term t  = r.getTermInReqTerm(s);
+								if (reformulation == 2){
+									t.setIdf((float)30.0);
+								} else {
+									t.setIdf((float)0.0);
+								}
+							} else {
+								r.addReqTerm(s);
+							}
+						}
+					
 						r.setCleanReq(Cleaner.cleanReformulationString(r.getReformulation()));
 						break;
 					}
@@ -86,8 +108,12 @@ public class Main {
 		}
 		for (Request r : reqs){
 			System.out.println(r);
-			System.out.println(p.rappel(r, 5)+p.rappel(r, 10)+p.rappel(r, 25)+p.precision(r, 5)+p.precision(r, 10)+p.precision(r, 25));
+			System.out.println(p.rappelToString(r, 5)+p.rappelToString(r, 10)+p.rappelToString(r, 25)+p.precisionToString(r, 5)+p.precisionToString(r, 10)+p.precisionToString(r, 25));
 		}
+		System.out.println("#############################");
+		System.out.println(" Moyenne rappel et précision ");
+		System.out.println("#############################");
+		System.out.println(p.rappelMoyen(reqs, 5)+p.rappelMoyen(reqs, 10)+p.rappelMoyen(reqs, 25)+p.precisionMoyenne(reqs, 5)+p.precisionMoyenne(reqs, 10)+p.precisionMoyenne(reqs, 25));
 		db.closeDB();
 	}
 

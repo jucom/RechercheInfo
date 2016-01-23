@@ -18,7 +18,7 @@ public class Request {
 	private int nbDocsInQrels;
 	private ArrayList<String> listDoc;
 	private ArrayList<RequestRelevance> listRelevanceDocs;
-	
+
 	/**
 	 * Constructeur
 	 * @param name
@@ -32,7 +32,7 @@ public class Request {
 		this.reformulation = "";
 		this.keyWords = new ArrayList<String>();
 	}
-	
+
 	/**
 	 * Cree la liste de requete
 	 * @param path
@@ -43,7 +43,6 @@ public class Request {
 		ArrayList<String> reqDoc = FileManager.listerRepertoire(path);
 		ArrayList<String> list = new ArrayList<String>();
 		for (String name : reqDoc){
-			System.out.println(name);
 			//String[] splited = name.split(".");
 			//System.out.println(splited);
 			Request r = new Request(name);
@@ -54,7 +53,7 @@ public class Request {
 			}
 			if (list != null) {
 				r.setReq(list.get(0));
-				
+
 				ArrayList<String> l = Cleaner.cleanString(r.getReq());
 				ArrayList<String> stopList;
 				try {
@@ -71,19 +70,19 @@ public class Request {
 					for (RequestRelevance r2 : r.getListRelevanceDocs()) {
 						System.out.println(r2.getDoc()+" , "+r2.getRelevance());
 					}
-					*/
+					 */
 					r.setNbDocPertinent(r.getListRelevanceDocs().size());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 			reqs.add(r);
 		}
 		return reqs;
 	}
-	
+
 	public static ArrayList<RequestRelevance> getPertinenceOfReq(String path, Request r) {
 		ArrayList<String> list = new ArrayList<String>();
 		ArrayList<RequestRelevance> listRelevanceDocs = new ArrayList<RequestRelevance>();
@@ -119,7 +118,7 @@ public class Request {
 		}
 		return listRelevanceDocs;
 	}
-	
+
 	/*public static void testRequests() {
 		ArrayList<Request> list = createListReq("./qrels/");
 		for (Request r : list) {
@@ -129,20 +128,20 @@ public class Request {
 			System.out.println("nb docs trouves dans qrels :"+r.getNbDocsInQrels());
 		}
 	}
-	
+
 	public static void testPertinence() {
 		ArrayList<RequestRelevance> l = getPertinenceOfReq("./qrels/qrels/qrelQ1.txt",new Request("test"));
 		for (RequestRelevance r : l) {
 			System.out.println(r.getDoc()+" , "+r.getRelevance());
 		}
 	}
-		
-	
+
+
 	public static void main( String args[] ){
 		testRequests();
 	}*/
-	
-	
+
+
 
 	public ArrayList<String> getListDoc() {
 		return listDoc;
@@ -152,7 +151,7 @@ public class Request {
 		this.listDoc = listDoc;
 	}
 
-	
+
 	public String getName() {
 		return name;
 	}
@@ -168,8 +167,8 @@ public class Request {
 	public void setCleanReq(ArrayList<String> cleanReq) {
 		this.cleanReq = cleanReq;
 	}
-	
-	
+
+
 	public ArrayList<String> getKeyWords() {
 		return keyWords;
 	}
@@ -178,7 +177,7 @@ public class Request {
 		this.keyWords = keyWords;
 	}
 
-	
+
 	public String getReformulation() {
 		return reformulation;
 	}
@@ -186,7 +185,7 @@ public class Request {
 	public void setReformulation(String reformulation) {
 		this.reformulation = reformulation;
 	}
-	
+
 	/**
 	 * Add term to Reformulation List
 	 * @param term
@@ -194,7 +193,7 @@ public class Request {
 	public void addReqTermReformulation(String term) {
 		this.reformulation += term + ";";
 	}
-	
+
 	/**
 	 * Add list to Reformulation List
 	 * @param term
@@ -203,11 +202,24 @@ public class Request {
 		for (String s : list){
 			this.addReqTermReformulation(s);
 		}
-		
+
 	}
 
 	public ArrayList<Term> getReqTerm() {
 		return reqTerm;
+	}
+	
+	/**
+	 * @param term
+	 * @return le term voulu de la liste ou null si il ne connnaît pas 
+	 */
+	public Term getTermInReqTerm(String term) {
+		for (Term t : this.reqTerm){
+			if (t.getName().equals(term)){
+				return t;
+			}
+		}
+		return null;
 	}
 
 	public void setReqTerm(ArrayList<Term> reqTerm) {
@@ -220,7 +232,22 @@ public class Request {
 		this.reqTerm.add(t);
 	}
 
-	
+
+	/**
+	 * @param term
+	 * @return si le term appartient deja ou pas a la liste
+	 */
+	public boolean isInReqTerm(String term) {
+		boolean res = false;
+		for (Term t : this.reqTerm){
+			if (t.getName().equals(term)){
+				res = true;
+			}
+		}
+		return res;
+	}
+
+
 	public int getNbDocFinded() {
 		return nbDocFinded;
 	}
@@ -260,7 +287,7 @@ public class Request {
 	public void setNbDocsInQrels(int nbDocsInQrels) {
 		this.nbDocsInQrels = nbDocsInQrels;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Request [name=" + name + "\n req=" + req + "\n reformulation=" + reformulation + "\n cleanReq="
@@ -268,7 +295,7 @@ public class Request {
 				+ "\n nbDocFinded=" + nbDocFinded + "\n nbDocsInQrels="
 				+ nbDocsInQrels +  "]";
 	}
-	
+
 
 
 }

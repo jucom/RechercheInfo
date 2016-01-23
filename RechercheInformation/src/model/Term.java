@@ -14,6 +14,7 @@ public class Term {
 	
 	public Term(String name) {
 		this.name = name;
+		this.idf = 0;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -40,7 +41,7 @@ public class Term {
 
 
 	public void setIdf(float idf) {
-		this.idf = idf;
+		this.idf += idf;
 	}
 
 

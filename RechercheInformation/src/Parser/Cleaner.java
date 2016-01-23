@@ -1,6 +1,9 @@
 package Parser;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.Normalizer;
+import model.Cst;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -125,6 +128,15 @@ public class Cleaner {
 	public static ArrayList<String> cleanReformulationString(String s) {
 		ArrayList<String> list = cleanString(s);
 		list = deleteDuplicateWords(list);
+		ArrayList<String> stopList;
+		try {
+			stopList = FileManager.readFileContent(Cst.stopListPath,"iso-8859-1");
+			list = Parser.deleteTokensFromStopList(list,stopList);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return list;
 	}
 	
