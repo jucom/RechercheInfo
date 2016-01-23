@@ -81,6 +81,9 @@ public class Matcher {
 				float res =  sumTermFrequencyV3(req, doc);
 				mapF.put(doc, res);
 			}
+			else if (version == 4) {
+				sumTermFrequencyV4(req, doc);
+			}
 			else if (version == 5) {
 				float res =  sumTermFrequencyV5(req, doc);
 				mapF.put(doc, res);

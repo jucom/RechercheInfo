@@ -30,9 +30,9 @@ public class Main {
 	public static void main( String args[] ){
 		//main(1, 0);
 		//main(2, 0);
-		//main(3, 2);
-		main(4, 0);
-		//main(5, 0);
+		//main(3, 0);
+		//main(4, 0);
+		main(5, 0);
 	}
 
 	/**
@@ -46,20 +46,20 @@ public class Main {
 		System.out.println("Initialisation des tables sql");
 		/* comment the following lines if you have already imported the corpus*/
 		
-		/*if (version == 5) {
+		if (version == 5) {
 			fillDb.fillDatabaseWithAllFiles(true);
 		}
 		else {
 			fillDb.fillDatabaseWithAllFiles(false);
-		}*/
-		
+		}
+
 		db.loadDB();
 		//On charge le Corpus
 		docs = FileManager.listerRepertoire();
-		
+
 		//On charge les requetes depuis les fichiers txt
 		reqs = Request.createListReq(Cst.reqsPath);
-		
+
 		if (reformulation != 0){
 			//On charge les requetes depuis le fichier html
 			File inputFile = new File(Cst.requestFile);
@@ -84,16 +84,16 @@ public class Main {
 								r.addReqTerm(s);
 							}
 						}
-					
+
 						r.setCleanReq(Cleaner.cleanReformulationString(r.getReformulation()));
 						break;
 					}
 				}
 			}
-			
-			
+
+
 		}
-		
+
 		//On initialise le matcher avec la liste des requetes et des docs
 		matcher = new Matcher(reqs, db);
 
