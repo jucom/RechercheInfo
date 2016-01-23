@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import Parser.FileManager;
@@ -81,12 +80,6 @@ public class Matcher {
 			else if (version == 3) {
 				float res =  sumTermFrequencyV3(req, doc);
 				mapF.put(doc, res);
-			}
-			else if (version == 4) {
-				float res =  sumTermFrequencyV4(req, doc);
-				//mapF.put(doc, res);
-				//getCosineSimilarity(req);
-
 			}
 			else if (version == 5) {
 				float res =  sumTermFrequencyV5(req, doc);
