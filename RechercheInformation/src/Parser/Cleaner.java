@@ -1,6 +1,5 @@
 package Parser;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.Normalizer;
 import model.Cst;
@@ -54,6 +53,7 @@ public class Cleaner {
 
 	/**
 	 * troncate (7 chars) and clean some special chars
+	 * delete final s of plural words
 	 * @param tokens
 	 * @return
 	 */
@@ -69,6 +69,10 @@ public class Cleaner {
 			token = token.replace("©", "");
 			token = token.replace("\\P{Graph}","");
 			if (token.length() > 0) {
+				// suppression du pluriel
+				if (token.length() > 4 && token.charAt(token.length()-1)=='s') {
+					token = token.substring(0, token.length()-1);
+				}
 				if (token.length() > 7) {
 					s2 = token.substring(0,7);
 				}
@@ -83,6 +87,7 @@ public class Cleaner {
 	
 	/**
 	 * troncate (7 chars) and clean some special chars
+	 * delete final s of plural words
 	 * @param tokens
 	 * @param sws
 	 */
@@ -177,5 +182,6 @@ public class Cleaner {
 			System.out.println(e);
 		}
 	}
+	
 	
 }

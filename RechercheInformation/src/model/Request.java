@@ -43,9 +43,8 @@ public class Request {
 		ArrayList<String> reqDoc = FileManager.listerRepertoire(path);
 		ArrayList<String> list = new ArrayList<String>();
 		for (String name : reqDoc){
-			//String[] splited = name.split(".");
-			//System.out.println(splited);
-			Request r = new Request(name);
+			String[] splited = name.split("\\.");
+			Request r = new Request(splited[0]);
 			try {
 				list = FileManager.readFileContent(path+name, "utf-8");
 			} catch (IOException e) {
