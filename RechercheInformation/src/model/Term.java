@@ -10,11 +10,19 @@ public class Term {
 	// ni : nb de documents contenant le terme ti
 	private float idf;
 	private HashMap<Integer,Float> mapIdDocTF;
+	/**
+	 * Poids du term dans la requête
+	 */
+	private float poids;
 	
-	
+	/**
+	 * Constructor
+	 * @param name
+	 */
 	public Term(String name) {
 		this.name = name;
 		this.idf = 0;
+		this.poids = 0;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -34,6 +42,20 @@ public class Term {
 	}
 
 
+	/**
+	 * @return poids
+	 */
+	public float getPoids() {
+		return poids;
+	}
+
+	/**
+	 * set poids
+	 * @param poids
+	 */
+	public void setPoids(float poids) {
+		this.poids = poids;
+	}
 
 	public float getIdf() {
 		return idf;

@@ -205,7 +205,7 @@ public class Matcher {
 			tf = tf/nbWords;
 			//System.out.println("3. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
 			//System.out.println("3.2 sumTermFrequencyV3 : idf " + (float)t.getIdf() + " term : " + t.getName());
-			tf = tf*t.getIdf();
+			tf = tf*(t.getIdf() + t.getPoids());
 			//System.out.println("4. sumTermFrequencyV3 : tf " + tf + " term : " + t.getName());
 			if (tf!=0.0){
 				//System.out.println("5. sumTermFrequencyV3 : terme :  " + t.getName());
@@ -305,9 +305,9 @@ public class Matcher {
 			if (nbWords != 0 || tf !=0){
 				tf = tf/(float) nbWords;
 				//System.out.println("tf = "+ tf);
-				tf = tf*t.getIdf();
+				tf = tf*(t.getIdf() + t.getPoids());
 				//System.out.println("tf = "+ tf);
-			}			
+			}	
 			tfidfvectors[count] = tf;
 			//System.out.println("idf = " + t.getIdf()/3);
 			termVector[count] = (float) (10);

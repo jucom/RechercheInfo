@@ -31,8 +31,8 @@ public class Main {
 		//main(1, 0);
 		//main(2, 0);
 		//main(3, 0);
-		//main(4, 0);
-		main(5, 0);
+		main(4, 0);
+		//main(5, 0);
 	}
 
 	/**
@@ -40,18 +40,19 @@ public class Main {
 	 * @param version
 	 * @param reformulation (seulement à partir de la V3)
 	 * 		0 si pas de reformulation
-	 * 		1 ou 2 Sinon
+	 * 		1 si reformaulation 1 (sans poids)
+	 * 		2 si reformulation avec poids
 	 */
 	public static void main(int version, int reformulation){
 		System.out.println("Initialisation des tables sql");
 		/* comment the following lines if you have already imported the corpus*/
 		
-		if (version == 5) {
+		/*if (version == 5) {
 			fillDb.fillDatabaseWithAllFiles(true);
 		}
 		else {
 			fillDb.fillDatabaseWithAllFiles(false);
-		}
+		}*/
 
 		db.loadDB();
 		//On charge le Corpus
@@ -76,9 +77,7 @@ public class Main {
 							if (r.isInReqTerm(s)){
 								Term t  = r.getTermInReqTerm(s);
 								if (reformulation == 2){
-									t.setIdf((float)100.0);
-								} else {
-									t.setIdf((float)0.0);
+									t.setPoids((float)100.0);
 								}
 							} else {
 								r.addReqTerm(s);
