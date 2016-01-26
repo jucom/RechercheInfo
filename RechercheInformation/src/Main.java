@@ -47,12 +47,12 @@ public class Main {
 		System.out.println("Initialisation des tables sql");
 		/* comment the following lines if you have already imported the corpus*/
 		
-		/*if (version == 5) {
+		if (version == 5) {
 			fillDb.fillDatabaseWithAllFiles(true);
 		}
 		else {
 			fillDb.fillDatabaseWithAllFiles(false);
-		}*/
+		}
 
 		db.loadDB();
 		//On charge le Corpus
