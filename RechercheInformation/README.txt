@@ -5,7 +5,7 @@
 - Ouvrir le projet dans eclipse
 - Lancer le Main (main.java) de la version à tester (voir le rapport pour plus de détails)
 main(1,0) : version 1 : tf simple
-main(2,0) : version 2 : tf pondéré
+main(2,0) : version 2 : tf normalisé
 main(3,0) : version 3 : tf idf
 main(4,0) : version 4 : cosinus
 main(5,0) : version 5 : prise en compte des balises
